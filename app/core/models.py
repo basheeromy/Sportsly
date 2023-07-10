@@ -20,6 +20,7 @@ class UserManager(BaseUserManager):
 
         return user
 
+
 class User(AbstractBaseUser, PermissionsMixin):
     """
     Model for all users in the project. including,
