@@ -24,6 +24,17 @@ class UserManager(BaseUserManager):
         return user
 
 
+    def create_superuser(self, email, mobile, password=None, **extra_fields):
+        """Create and return new super user."""
+        user=self.create_user(email, mobile, password, **extra_fields)
+        user.is_staff=True
+        user.is_superuser=True
+        user.save(using=self._db)
+
+        return user
+
+
+
 class User(AbstractBaseUser, PermissionsMixin):
     """
     Model for all users in the project. including,
@@ -32,7 +43,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
-    mobile = models.CharField(max_length=20, unique=True)
+    mobile = models.CharField(max_length=15, unique=True)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_seller = models.BooleanField(default=False)
