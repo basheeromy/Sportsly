@@ -5,7 +5,8 @@ from django.contrib.auth import get_user_model
 from faker import Faker
 
 
-
+fake = Faker()
+random_mobile_number = fake.numerify(text='############')
 class ModelTest(TestCase):
     """Test models."""
 
@@ -14,8 +15,7 @@ class ModelTest(TestCase):
 
         email = 'test@example.com'
         password = 'testpass123'
-        fake = Faker()
-        random_mobile_number = fake.numerify(text='############')
+
         user = get_user_model().objects.create_user(
             email=email,
             mobile=random_mobile_number,
@@ -43,3 +43,15 @@ class ModelTest(TestCase):
                 email, random_mobile_number, 'sample123'
                 )
             self.assertEqual(user.email, expected)
+
+
+    def test_new_user_without_email_raises_error(self):
+        """
+        Test that creating a user, without an email raises a valueError.
+        """
+        with self.assertRaises(ValueError):
+            get_user_model().objects.create_user(
+                '',
+                random_mobile_number,
+                'sample123'
+                )
