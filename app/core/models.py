@@ -17,20 +17,26 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError('User must have an email address.')
 
-        user = self.model(email=self.normalize_email(email),mobile=mobile, **extra_fields)
+        if not mobile:
+            raise ValueError('User must have a mobile number.')
+
+        user = self.model(email=self.normalize_email(email), mobile=mobile, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
 
         return user
 
 
-    def create_superuser(self, email, mobile, password=None, **extra_fields):
+    def create_superuser(self, email,mobile, password=None):
         """Create and return new super user."""
-        user=self.create_user(email, mobile, password, **extra_fields)
-        user.is_staff=True
-        user.is_superuser=True
-        user.save(using=self._db)
+        user=self.create_user(
+            email,mobile, password,
+            is_staff=True,
+            is_superuser=True,
+            is_active=True,
 
+        )
+        user.save(using=self._db)
         return user
 
 
@@ -51,3 +57,4 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['mobile']
