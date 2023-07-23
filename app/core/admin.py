@@ -19,6 +19,7 @@ class UserAdmin(BaseUserAdmin):
                     'is_active',
                     'is_staff',
                     'is_superuser',
+                    'is_seller',
                 )
             }
         ),
@@ -37,6 +38,7 @@ class UserAdmin(BaseUserAdmin):
                 'is_active',
                 'is_staff',
                 'is_superuser',
+                'is_seller',
             )
         }),
     )

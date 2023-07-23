@@ -39,6 +39,14 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+    def create_vendor_user(self, email, mobile, password=None):
+        """Create and return new Vendor user."""
+        user = self.create_user(
+            email,mobile,password,
+            is_seller = True,
+        )
+        user.save(using=self._db)
+        return user
 
 
 class User(AbstractBaseUser, PermissionsMixin):
