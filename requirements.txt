@@ -5,3 +5,4 @@ faker>=18.13.0,<18.14
 drf-spectacular>=0.26.3,<0.27
 djangorestframework-simplejwt>=5.2.2,<5.3
 django-cors-headers>=4.2.0,<4.3
+requests>=2.31.0,<2.32

@@ -58,6 +58,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     mobile = models.CharField(max_length=15, unique=True)
+    otp = models.CharField(max_length=9, blank=True, null=True)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_seller = models.BooleanField(default=False)
