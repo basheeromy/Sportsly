@@ -8,7 +8,7 @@ from rest_framework_simplejwt.views import (
 )
 from user.views import (
     CreatUserView,
-    ValidateUserGenerateOtpView,
+    GenerateOtpView,
     VerifyOTPView,
 )
 
@@ -19,6 +19,6 @@ urlpatterns = [
     path('create/', CreatUserView.as_view(), name='create'),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('generate-otp/', ValidateUserGenerateOtpView.as_view(), name='generate_otp'),
+    path('generate-otp/', GenerateOtpView.as_view(), name='generate_otp'),
     path('verify-otp/', VerifyOTPView.as_view(), name='verify_otp'),
 ]
