@@ -7,6 +7,8 @@ from faker import Faker
 
 fake = Faker()
 random_mobile_number = fake.numerify(text='############')
+
+
 class ModelTest(TestCase):
     """Test models."""
 
@@ -24,8 +26,6 @@ class ModelTest(TestCase):
         self.assertEqual(user.email, email)
         self.assertTrue(user.check_password(password))
 
-
-
     def test_new_user_email_normalized(self):
         """Test email normalized for new user."""
         sample_emails = [
@@ -35,7 +35,6 @@ class ModelTest(TestCase):
             ['test4@example.COM', 'test4@example.com'],
         ]
 
-
         for email, expected in sample_emails:
             fake = Faker()
             random_mobile_number = fake.numerify(text='############')
@@ -43,7 +42,6 @@ class ModelTest(TestCase):
                 email, random_mobile_number, 'sample123'
                 )
             self.assertEqual(user.email, expected)
-
 
     def test_new_user_without_email_raises_error(self):
         """
@@ -55,7 +53,6 @@ class ModelTest(TestCase):
                 random_mobile_number,
                 'sample123'
                 )
-
 
     def test_create_superuser(self):
         """Test creating superuser."""

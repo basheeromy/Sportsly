@@ -199,3 +199,6 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 OTP_API_KEY = env('OTP_API_KEY')
+
+MEDIA_ROOT = BASE_DIR/'media'
+MEDIA_URL = '/media/'

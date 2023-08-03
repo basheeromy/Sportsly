@@ -20,17 +20,20 @@ class UserManager(BaseUserManager):
         if not mobile:
             raise ValueError('User must have a mobile number.')
 
-        user = self.model(email=self.normalize_email(email), mobile=mobile, **extra_fields)
+        user = self.model(
+            email=self.normalize_email(email),
+            mobile=mobile,
+            **extra_fields
+        )
         user.set_password(password)
         user.save(using=self._db)
 
         return user
 
-
-    def create_superuser(self, email,mobile, password=None):
+    def create_superuser(self, email, mobile, password=None):
         """Create and return new super user."""
-        user=self.create_user(
-            email,mobile, password,
+        user = self.create_user(
+            email, mobile, password,
             is_staff=True,
             is_superuser=True,
             is_active=True,
@@ -42,8 +45,8 @@ class UserManager(BaseUserManager):
     def create_vendor_user(self, email, mobile, password=None):
         """Create and return new Vendor user."""
         user = self.create_user(
-            email,mobile,password,
-            is_seller = True,
+            email, mobile, password,
+            is_seller=True,
         )
         user.save(using=self._db)
         return user

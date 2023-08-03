@@ -5,7 +5,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.status import (
     HTTP_200_OK,
-    HTTP_404_NOT_FOUND,
     HTTP_400_BAD_REQUEST,
 )
 from django.conf import settings
@@ -19,13 +18,13 @@ from django.contrib.auth import get_user_model
 
 from drf_spectacular.utils import extend_schema
 import requests
-import math, random
+import math
+import random
 
 
 class CreatUserView(CreateAPIView):
     """Create a new Customer user."""
     serializer_class = UserSerializer
-
 
 
 def send_otp(phone):
@@ -45,12 +44,13 @@ def send_otp(phone):
             otp += digits[math.floor(random.random() * 10)]
 
         phone = str(phone)
-        link = f'https://2factor.in/API/V1/{settings.OTP_API_KEY}/SMS/+91{phone}/{otp}/OTP-1'
+        link = f'https://2factor.in/API/V1/{settings.OTP_API_KEY}/SMS/+91{phone}/{otp}/OTP-1' # noqa
         result = requests.get(link, verify=False)
-        print(otp)
+        print(result)
         return otp
     else:
         return False
+
 
 class GenerateOtpView(APIView):
     @extend_schema(request=GenerateOtpSerializer, responses=None)
@@ -108,7 +108,7 @@ class VerifyOTPView(APIView):
                 })
         except Exception as e:
             return Response({
-                'status' : False,
-                'message' : str(e),
-                'details' : 'OTP Verification failed'
+                'status': False,
+                'message': str(e),
+                'details': 'OTP Verification failed'
             })

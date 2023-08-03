@@ -3,21 +3,18 @@
 from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
-from rest_framework.response import Response
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ['email','mobile','password','name']
-        extra_kwargs = {'password':{'write_only':True, 'min_length':5}}
+        fields = ['email', 'mobile', 'password', 'name']
+        extra_kwargs = {'password': {'write_only': True, 'min_length': 5}}
 
-    def create(self,validated_data):
+    def create(self, validated_data):
         """Create and return a user with encrypted password."""
 
         return get_user_model().objects.create_user(**validated_data)
-
-
 
 
 class GenerateOtpSerializer(serializers.Serializer):
@@ -32,10 +29,12 @@ class GenerateOtpSerializer(serializers.Serializer):
 
         user = get_user_model().objects.filter(mobile__iexact=mobile)
         if not user.exists():
-            raise serializers.ValidationError("User not found! Please register.")
-
+            raise serializers.ValidationError(
+                "User not found! Please register."
+            )
 
         return mobile
+
 
 class ValidateOtpSerializer(serializers.Serializer):
     """Check mobile number and otp."""
@@ -47,6 +46,8 @@ class ValidateOtpSerializer(serializers.Serializer):
         """Check user and otp exists."""
         user = get_user_model().objects.filter(mobile__iexact=mobile)
         if not user.exists():
-            raise serializers.ValidationError("User not found! Please register.")
+            raise serializers.ValidationError(
+                "User not found! Please register."
+            )
 
         return user
