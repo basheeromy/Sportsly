@@ -10,6 +10,6 @@ class Product_Item_Admin(admin.ModelAdmin):
 admin.site.register(models.Category)
 admin.site.register(models.Color)
 admin.site.register(models.Size)
-admin.site.register(models.Image)
+admin.site.register(models.Product_Image)
 admin.site.register(models.Product)
 admin.site.register(models.Product_item, Product_Item_Admin)
