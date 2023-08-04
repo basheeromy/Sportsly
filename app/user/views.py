@@ -44,9 +44,10 @@ def send_otp(phone):
             otp += digits[math.floor(random.random() * 10)]
 
         phone = str(phone)
-        link = f'https://2factor.in/API/V1/{settings.OTP_API_KEY}/SMS/+91{phone}/{otp}/OTP-1' # noqa
-        result = requests.get(link, verify=False)
-        print(result)
+        #link = f'https://2factor.in/API/V1/{settings.OTP_API_KEY}/SMS/+91{phone}/{otp}/OTP-1' # noqa
+        #result = requests.get(link, verify=False)
+        #print(result)
+        print(otp)
         return otp
     else:
         return False

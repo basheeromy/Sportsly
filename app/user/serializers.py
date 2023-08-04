@@ -16,6 +16,14 @@ class UserSerializer(serializers.ModelSerializer):
 
         return get_user_model().objects.create_user(**validated_data)
 
+    def update(self, instance, validated_data):
+        """Handle updating user."""
+
+        if 'password' in validated_data:
+            password = validated_data.pop('password')
+            instance.set_password(password)
+
+        return super().update(instance, validated_data)
 
 class GenerateOtpSerializer(serializers.Serializer):
     """Check mobile number valid or not"""
@@ -28,9 +36,15 @@ class GenerateOtpSerializer(serializers.Serializer):
             raise serializers.ValidationError("Phone number is required.")
 
         user = get_user_model().objects.filter(mobile__iexact=mobile)
+        
         if not user.exists():
             raise serializers.ValidationError(
                 "User not found! Please register."
+            )
+
+        if user.first().is_active == False:
+            raise serializers.ValidationError(
+                "user not activated."
             )
 
         return mobile
