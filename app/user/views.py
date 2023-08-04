@@ -112,3 +112,5 @@ class VerifyOTPView(APIView):
                 'message': str(e),
                 'details': 'OTP Verification failed'
             })
+
+
