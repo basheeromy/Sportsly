@@ -5,6 +5,8 @@ from django.core.validators import MinValueValidator
 from PIL import Image # noqa
 from core.models import User
 from django.utils import timezone
+from django.utils.text import slugify
+
 
 
 class Category(models.Model):
@@ -72,6 +74,9 @@ class Product_item(models.Model):
     updated_on = models.DateField(editable=False)
     is_active = models.BooleanField(default=True)
     coupen = models.CharField(max_length=200, null=True, blank=True)
+
+    class Meta:
+        ordering = ('-updated_on',)
 
     def save(self, *args, **kwargs):
         """
