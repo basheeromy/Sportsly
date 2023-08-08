@@ -3,6 +3,7 @@
 from rest_framework.generics import CreateAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.status import (
     HTTP_200_OK,
     HTTP_400_BAD_REQUEST,
@@ -12,7 +13,8 @@ from django.conf import settings
 from user.serializers import (
     UserSerializer,
     GenerateOtpSerializer,
-    ValidateOtpSerializer
+    ValidateOtpSerializer,
+    GenerateTokenSerializer
     )
 from django.contrib.auth import get_user_model
 
@@ -26,6 +28,17 @@ class CreatUserView(CreateAPIView):
     """Create a new Customer user."""
     serializer_class = UserSerializer
 
+
+class GenerateTokenView(APIView):
+    @extend_schema(request=GenerateTokenSerializer, responses=None)
+    def post(self, request, *args, **kwargs):
+        serializer = GenerateTokenSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        refresh = RefreshToken.for_user(data)
+        return Response({'refresh': str(refresh),
+                         'access': str(refresh.access_token),
+        })
 
 def send_otp(phone):
     """

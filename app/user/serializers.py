@@ -1,6 +1,6 @@
 """Serializers for user API views."""
 
-from django.contrib.auth import get_user_model
+from django.contrib.auth import (get_user_model)
 
 from rest_framework import serializers
 
@@ -25,6 +25,34 @@ class UserSerializer(serializers.ModelSerializer):
 
         return super().update(instance, validated_data)
 
+class GenerateTokenSerializer(serializers.Serializer):
+
+    email = serializers.EmailField()
+    password = serializers.CharField()
+
+    def validate(self, data):
+        email = data['email']
+        password = data['password']
+        if not email:
+            raise serializers.ValidationError("Email is required.")
+        elif not password:
+            raise serializers.ValidationError("Password is required.")
+
+        user = get_user_model().objects.filter(email__iexact=email)
+
+        if not user.exists():
+            raise serializers.ValidationError("User not found! Please register.")
+        user = user.first()
+        if user.check_password(password) == False:
+            raise serializers.ValidationError("Incorrect Password.")
+        if user.is_active == False:
+            raise serializers.ValidationError(
+                "user not activated."
+            )
+
+        return user
+
+
 class GenerateOtpSerializer(serializers.Serializer):
     """Check mobile number valid or not"""
 
@@ -36,16 +64,13 @@ class GenerateOtpSerializer(serializers.Serializer):
             raise serializers.ValidationError("Phone number is required.")
 
         user = get_user_model().objects.filter(mobile__iexact=mobile)
-        
+
         if not user.exists():
             raise serializers.ValidationError(
                 "User not found! Please register."
             )
 
-        if user.first().is_active == False:
-            raise serializers.ValidationError(
-                "user not activated."
-            )
+
 
         return mobile
 
