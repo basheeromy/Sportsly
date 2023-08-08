@@ -1,6 +1,8 @@
 """Views for the Create user API"""
 
-from rest_framework.generics import CreateAPIView
+from rest_framework import permissions
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -28,6 +30,14 @@ class CreatUserView(CreateAPIView):
     """Create a new Customer user."""
     serializer_class = UserSerializer
 
+class ManageUserView(RetrieveUpdateDestroyAPIView):
+    """Manage the authenticated user."""
+    serializer_class = UserSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
 
 class GenerateTokenView(APIView):
     @extend_schema(request=GenerateTokenSerializer, responses=None)
@@ -100,7 +110,6 @@ class VerifyOTPView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = ValidateOtpSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        print()
         try:
 
             user = serializer.validated_data.get('mobile')

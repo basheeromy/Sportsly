@@ -11,7 +11,9 @@ from user.views import (
     CreatUserView,
     GenerateOtpView,
     VerifyOTPView,
-    GenerateTokenView
+    GenerateTokenView,
+    ManageUserView
+
 )
 
 app_name = 'user'
@@ -19,6 +21,7 @@ app_name = 'user'
 
 urlpatterns = [
     path('create/', CreatUserView.as_view(), name='create'),
+    path('update/', ManageUserView.as_view(), name="update"),
     path('token/', GenerateTokenView.as_view(), name='token_obtain_pair'),
     #path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
