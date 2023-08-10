@@ -4,5 +4,5 @@ from .views import ProductListView
 
 
 urlpatterns = [
-    path('list/', ProductListView.as_view(), name="latest-products")
+    path('list-product/', ProductListView.as_view(), name="latest-products")
 ]
