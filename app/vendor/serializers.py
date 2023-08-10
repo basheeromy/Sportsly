@@ -3,6 +3,16 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
+from product.models import (
+    Product,
+    Category,
+    Product_Image,
+    Color,
+    Size,
+    Product_item
+
+)
+
 class VendorSerializer(serializers.ModelSerializer):
     """Serializer to create vendor"""
 
@@ -15,3 +25,6 @@ class VendorSerializer(serializers.ModelSerializer):
         """Create and return a vendor user."""
 
         return get_user_model().objects.create_vendor_user(**validated_data)
+
+class CategoryEntries(serializers.RelatedField):
+    pass
