@@ -40,6 +40,11 @@ class Product(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     category = models.ManyToManyField(Category, blank=True)
+    seller = models.ForeignKey(
+        User,
+        related_name="Seller_of_product",
+        on_delete=models.CASCADE
+    )
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
@@ -61,11 +66,7 @@ class Product_item(models.Model):
         default=0,
         validators=[MinValueValidator(0)]
         )
-    seller = models.ForeignKey(
-        User,
-        related_name="Seller_of_product",
-        on_delete=models.CASCADE
-    )
+
     discount = models.IntegerField(
         default=0,
         validators=[MinValueValidator(0)]
