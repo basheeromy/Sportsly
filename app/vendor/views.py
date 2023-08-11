@@ -13,13 +13,13 @@ from rest_framework.generics import (
     CreateAPIView,
     ListAPIView,
     UpdateAPIView,
+    ListCreateAPIView,
     RetrieveUpdateDestroyAPIView
 )
 from rest_framework.status import (
-    HTTP_200_OK,
     HTTP_400_BAD_REQUEST,
 )
-from drf_spectacular.utils import extend_schema
+
 from product.serializers import (
     ProductSerializer,
     CategorySerializer
@@ -35,20 +35,18 @@ class CreateVendorView(CreateAPIView):
     serializer_class = VendorSerializer
 
 
-class ListProductView(ListAPIView):
+class ListCreateProductView(ListCreateAPIView):
+    """List and create product."""
+
     serializer_class = ProductSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request, format=None):
         product = Product.objects.filter(seller=request.user)
         serializer = ProductSerializer(product, many=True)
 
         return Response(serializer.data)
-
-class CreateProductView(CreateAPIView):
-    """Create a new Product"""
-    serializer_class = ProductSerializer
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
-
 
 
 class UpdateProductView(UpdateAPIView):
@@ -58,6 +56,7 @@ class UpdateProductView(UpdateAPIView):
     queryset = Product.objects.filter()
 
     def get_object(self):
+
         """Over ride get_object method"""
         try:
             id = self.request.data['id']
@@ -68,6 +67,7 @@ class UpdateProductView(UpdateAPIView):
 
     def update(self, request, *args, **kwargs):
         """Update a product."""
+
         instance = self.get_object()
         if instance is False:
             return Response({'message': 'Id not provided or wrong id',
@@ -85,7 +85,9 @@ class UpdateProductView(UpdateAPIView):
         else:
             return Response({"message": "failed"})
 
-class ListCategoryView(ListAPIView):
+class ListCreateCategoryView(ListCreateAPIView):
+    """List available categories and Create new category"""
+
     serializer_class = CategorySerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -94,3 +96,4 @@ class ListCategoryView(ListAPIView):
         category_list = Category.objects.all()
         serializer = CategorySerializer(category_list, many=True)
         return Response(serializer.data)
+

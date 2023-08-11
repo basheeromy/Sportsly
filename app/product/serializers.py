@@ -38,6 +38,23 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = [
+            'id',
             'name',
             'parent'
         ]
+        extra_kwargs = {'parent': {'required': False}}
+
+    def create(self, validated_data):
+        """Create and return new category"""
+        user = (self.context['request']).user
+        if user.is_seller == False:
+            raise serializers.ValidationError("Register as a seller.")
+
+        category = Category(
+            name = validated_data['name'],
+        )
+        if 'parent' in validated_data.keys():
+            category.parent = validated_data['parent']
+        category.save()
+
+        return category
