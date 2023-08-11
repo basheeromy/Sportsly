@@ -8,7 +8,8 @@ from rest_framework.response import Response
 from product.models import (
     Product,
     Category,
-    Size
+    Size,
+    Color
 )
 from rest_framework.generics import (
     CreateAPIView,
@@ -24,7 +25,8 @@ from rest_framework.status import (
 from product.serializers import (
     ProductSerializer,
     CategorySerializer,
-    SizeSerializer
+    SizeSerializer,
+    ColorSerializer
 )
 from vendor.serializers import (
     VendorSerializer
@@ -182,6 +184,58 @@ class UpdateSizeView(UpdateAPIView):
             self.perform_update(serializer)
             return Response(
                 {"message": "Size updated successfully",
+                 "data":serializer.data}
+            )
+        else:
+            return Response({"message": "failed"})
+
+
+class ListCreateColorView(ListCreateAPIView):
+    """List and create color."""
+
+    serializer_class = ColorSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, format=None):
+        color_list = Color.objects.all()
+        serializer = ColorSerializer(color_list, many=True)
+        return Response(serializer.data)
+
+
+class UpdateColorView(UpdateAPIView):
+    """Update Color."""
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ColorSerializer
+    queryset = Color.objects.filter()
+
+    def get_object(self):
+        """Over ride get_object method"""
+
+        try:
+            id = self.request.data['id']
+            instance = Color.objects.get(id=id)
+            return instance
+        except:
+            return False
+
+
+    def update(self, request, *args, **kwargs):
+        """Update a category."""
+
+        instance = self.get_object()
+        if instance is False:
+            return Response({'message': 'Id not provided or wrong id',
+                             'status':HTTP_400_BAD_REQUEST
+                            }, 400)
+
+        data = request.data
+        serializer = self.get_serializer(instance, data, partial=True )
+        if serializer.is_valid():
+            self.perform_update(serializer)
+            return Response(
+                {"message": "Color updated successfully",
                  "data":serializer.data}
             )
         else:

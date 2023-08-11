@@ -7,6 +7,8 @@ from .models import (
     Color
 )
 
+
+
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
@@ -84,3 +86,27 @@ class SizeSerializer(serializers.ModelSerializer):
         size.save()
 
         return size
+
+class ColorSerializer(serializers.ModelSerializer):
+    """Serializer to manage product color."""
+
+    class Meta:
+        model = Color
+        fields = [
+            'id',
+            'name'
+        ]
+
+    def create(self, validated_data):
+        """Create and return new color."""
+
+        user = (self.context['request']).user
+        if user.is_seller == False:
+            raise serializers.ValidationError("Register as a seller.")
+
+        color = Color(
+            name = validated_data['name']
+        )
+        color.save()
+
+        return color
