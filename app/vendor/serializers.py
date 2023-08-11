@@ -25,6 +25,3 @@ class VendorSerializer(serializers.ModelSerializer):
         """Create and return a vendor user."""
 
         return get_user_model().objects.create_vendor_user(**validated_data)
-
-class CategoryEntries(serializers.RelatedField):
-    pass

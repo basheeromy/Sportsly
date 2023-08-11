@@ -5,7 +5,10 @@ Views to manage Vendor related business logics.
 from rest_framework import permissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.response import Response
-from product.models import Product
+from product.models import (
+    Product,
+    Category
+)
 from rest_framework.generics import (
     CreateAPIView,
     ListAPIView,
@@ -17,7 +20,10 @@ from rest_framework.status import (
     HTTP_400_BAD_REQUEST,
 )
 from drf_spectacular.utils import extend_schema
-from product.serializers import ProductSerializer
+from product.serializers import (
+    ProductSerializer,
+    CategorySerializer
+)
 from vendor.serializers import (
     VendorSerializer
 )
@@ -59,7 +65,7 @@ class UpdateProductView(UpdateAPIView):
             return instance
         except:
             return False
-        
+
     def update(self, request, *args, **kwargs):
         """Update a product."""
         instance = self.get_object()
@@ -79,3 +85,12 @@ class UpdateProductView(UpdateAPIView):
         else:
             return Response({"message": "failed"})
 
+class ListCategoryView(ListAPIView):
+    serializer_class = CategorySerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, format=None):
+        category_list = Category.objects.all()
+        serializer = CategorySerializer(category_list, many=True)
+        return Response(serializer.data)

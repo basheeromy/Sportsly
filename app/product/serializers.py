@@ -2,7 +2,7 @@
 from rest_framework import serializers
 from .models import (
     Product,
-    Product_item
+    Category
 )
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -31,3 +31,13 @@ class ProductSerializer(serializers.ModelSerializer):
         product.category.set(validated_data['category'])
         product.save()
         return product
+
+class CategorySerializer(serializers.ModelSerializer):
+    """Serializer to manage category."""
+
+    class Meta:
+        model = Category
+        fields = [
+            'name',
+            'parent'
+        ]
