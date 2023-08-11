@@ -2,7 +2,9 @@
 from rest_framework import serializers
 from .models import (
     Product,
-    Category
+    Category,
+    Size,
+    Color
 )
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -58,3 +60,27 @@ class CategorySerializer(serializers.ModelSerializer):
         category.save()
 
         return category
+
+
+class SizeSerializer(serializers.ModelSerializer):
+    """Serializer to manage size."""
+    class Meta:
+        model = Size
+        fields = [
+            'id',
+            'name'
+        ]
+
+    def create(self, validated_data):
+        """Create and return new size."""
+
+        user = (self.context['request']).user
+        if user.is_seller == False:
+            raise serializers.ValidationError("Register as a seller.")
+
+        size = Size(
+            name = validated_data['name'],
+        )
+        size.save()
+
+        return size
