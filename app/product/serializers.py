@@ -44,7 +44,8 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'name',
-            'parent'
+            'parent',
+            'created_by'
         ]
         extra_kwargs = {'parent': {'required': False}}
 
@@ -59,6 +60,7 @@ class CategorySerializer(serializers.ModelSerializer):
         )
         if 'parent' in validated_data.keys():
             category.parent = validated_data['parent']
+        category.created_by = validated_data['created_by']
         category.save()
 
         return category
@@ -70,7 +72,8 @@ class SizeSerializer(serializers.ModelSerializer):
         model = Size
         fields = [
             'id',
-            'name'
+            'name',
+            'created_by'
         ]
 
     def create(self, validated_data):
@@ -83,6 +86,7 @@ class SizeSerializer(serializers.ModelSerializer):
         size = Size(
             name = validated_data['name'],
         )
+        size.created_by = validated_data['created_by']
         size.save()
 
         return size
@@ -94,7 +98,8 @@ class ColorSerializer(serializers.ModelSerializer):
         model = Color
         fields = [
             'id',
-            'name'
+            'name',
+            'created_by'
         ]
 
     def create(self, validated_data):
@@ -107,6 +112,7 @@ class ColorSerializer(serializers.ModelSerializer):
         color = Color(
             name = validated_data['name']
         )
+        color.created_by = validated_data['created_by']
         color.save()
 
         return color

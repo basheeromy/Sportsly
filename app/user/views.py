@@ -2,7 +2,7 @@
 
 from rest_framework import permissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -137,3 +137,14 @@ class VerifyOTPView(APIView):
             })
 
 
+class ListAllUserView(ListAPIView):
+    serializer_class = UserSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    @extend_schema(request=UserSerializer, responses=None)
+    def get(self, request, format=None):
+        users = get_user_model().objects.all()
+        serializer = UserSerializer(users, many=True)
+
+        return Response(serializer.data)

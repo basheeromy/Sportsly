@@ -12,7 +12,8 @@ from user.views import (
     GenerateOtpView,
     VerifyOTPView,
     GenerateTokenView,
-    ManageUserView
+    ManageUserView,
+    ListAllUserView
 
 )
 
@@ -27,4 +28,5 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('generate-otp/', GenerateOtpView.as_view(), name='generate_otp'),
     path('verify-otp/', VerifyOTPView.as_view(), name='verify_otp'),
+    path('list-all-user', ListAllUserView.as_view(), name='list_all_user'),
 ]
