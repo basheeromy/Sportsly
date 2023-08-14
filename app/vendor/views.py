@@ -123,8 +123,8 @@ class UpdateCategoryView(UpdateAPIView):
         instance = self.get_object()
         if instance is False:
             return Response({'message': 'Id not provided or wrong id',
-                             'status':HTTP_400_BAD_REQUEST
-                            }, 400)
+
+                            }, status = HTTP_400_BAD_REQUEST)
 
         data = request.data
         serializer = self.get_serializer(instance, data, partial=True )

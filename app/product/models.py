@@ -1,5 +1,6 @@
 """Models to manage products."""
-
+import uuid
+import os
 from django.db import models
 from django.core.validators import MinValueValidator
 from PIL import Image # noqa
@@ -14,6 +15,7 @@ class Category(models.Model):
 
     name = models.CharField(max_length=100, unique=True)
     parent = models.ForeignKey('self', on_delete=models.PROTECT, null=True, blank=True)
+    #created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -22,6 +24,7 @@ class Category(models.Model):
 class Color(models.Model):
     """Color options for products."""
     name = models.CharField(max_length=100, unique=True)
+    #created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -30,6 +33,7 @@ class Color(models.Model):
 class Size(models.Model):
     """Size options for products."""
     name = models.CharField(max_length=100, unique=True)
+    #created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -94,14 +98,21 @@ class Product_item(models.Model):
         return f'{self.name} {self.color} {self.size}'
 
 
+def product_image_file_path(instance, filename):
+    """Generate file path for new product image."""
+    ext = os.path.splitext(filename)[1]
+    filename = f'{uuid.uuid4()}{ext}'
+
+    return os.path.join('uploads', 'product', filename)
+
 class Product_Image(models.Model):
     name = models.CharField(max_length=100)
-    image = models.ImageField(upload_to='uploads/')
+    image = models.ImageField(upload_to=product_image_file_path)
     product = models.ForeignKey(
         Product_item,
         related_name="Product_image",
         on_delete=models.CASCADE
     )
-
+    created_by = models.ForeignKey(User, related_name="Uploaded_seller", on_delete=models.CASCADE)
     def __str__(self):
         return f'{self.name} image'
