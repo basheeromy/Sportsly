@@ -4,7 +4,8 @@ from .models import (
     Product,
     Category,
     Size,
-    Color
+    Color,
+    Product_Image
 )
 
 
@@ -116,3 +117,32 @@ class ColorSerializer(serializers.ModelSerializer):
         color.save()
 
         return color
+
+
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product_Image
+        fields = [
+            'id',
+            'name',
+            'image',
+            'product',
+            'created_by'
+        ]
+
+    def create(self, validated_data):
+        """Create and return new color."""
+
+        user = (self.context['request']).user
+        if user.is_seller == False:
+            raise serializers.ValidationError("Register as a seller.")
+
+        image = Product_Image(
+            name = validated_data['name'],
+            image = validated_data['image']
+        )
+        image.product = validated_data['product']
+        image.created_by = validated_data['created_by']
+        image.save()
+
+        return image

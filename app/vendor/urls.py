@@ -10,7 +10,8 @@ from vendor.views import (
     ListCreateSizeView,
     UpdateSizeView,
     ListCreateColorView,
-    UpdateColorView
+    UpdateColorView,
+    ListCreateImageView
 )
 
 urlpatterns = [
@@ -22,5 +23,6 @@ urlpatterns = [
     path('list-create-size', ListCreateSizeView.as_view(), name='list-create-size'),
     path('update-size', UpdateSizeView.as_view(), name='update-size'),
     path('list-create-color', ListCreateColorView.as_view(), name='list-create-color'),
-    path('update-color', UpdateColorView.as_view(), name='update-color')
+    path('update-color', UpdateColorView.as_view(), name='update-color'),
+    path('list-create-image', ListCreateImageView.as_view(), name='list-images')
 ]

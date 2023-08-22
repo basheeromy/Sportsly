@@ -4,12 +4,14 @@ Views to manage Vendor related business logics.
 
 from rest_framework import permissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from drf_spectacular.utils import extend_schema
 from rest_framework.response import Response
 from product.models import (
     Product,
     Category,
     Size,
-    Color
+    Color,
+    Product_Image
 )
 from rest_framework.generics import (
     CreateAPIView,
@@ -26,7 +28,8 @@ from product.serializers import (
     ProductSerializer,
     CategorySerializer,
     SizeSerializer,
-    ColorSerializer
+    ColorSerializer,
+    ImageSerializer
 )
 from vendor.serializers import (
     VendorSerializer
@@ -240,3 +243,27 @@ class UpdateColorView(UpdateAPIView):
             )
         else:
             return Response({"message": "failed"})
+
+
+class ListImageView(ListAPIView):
+    serializer_class = ImageSerializer
+    """authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]"""
+
+    @extend_schema(request=ImageSerializer, responses=None)
+    def get(self, request, format=None):
+        users = Product_Image.objects.all()
+        serializer = ImageSerializer(users, many=True)
+
+        return Response(serializer.data)
+
+class ListCreateImageView(ListCreateAPIView):
+    serializer_class = ImageSerializer
+    queryset = Product_Image.objects.all()
+    """authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]"""
+
+    def get(self, request, format=None):
+        color_list = Product_Image.objects.all()
+        serializer = ImageSerializer(color_list, many=True)
+        return Response(serializer.data)
