@@ -2,10 +2,7 @@
 Views to manage Vendor related business logics.
 """
 
-from rest_framework import permissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from drf_spectacular.utils import extend_schema
-from django.core.cache import cache
 from rest_framework.response import Response
 from product.models import (
     Product,
@@ -16,10 +13,8 @@ from product.models import (
 )
 from rest_framework.generics import (
     CreateAPIView,
-    ListAPIView,
     UpdateAPIView,
     ListCreateAPIView,
-    RetrieveUpdateDestroyAPIView
 )
 from rest_framework.status import (
     HTTP_400_BAD_REQUEST,

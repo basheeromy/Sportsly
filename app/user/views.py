@@ -41,6 +41,10 @@ class ManageUserView(RetrieveUpdateDestroyAPIView):
         return self.request.user
 
 class GenerateTokenView(APIView):
+    """
+    View to generate token.
+    """
+
     @extend_schema(request=GenerateTokenSerializer, responses=None)
     def post(self, request, *args, **kwargs):
         serializer = GenerateTokenSerializer(data=request.data)
@@ -77,6 +81,10 @@ def send_otp(phone):
 
 
 class GenerateOtpView(APIView):
+    """
+    View to generate otp.
+    """
+
     @extend_schema(request=GenerateOtpSerializer, responses=None)
     def post(self, request, *args, **kwargs):
         serializer = GenerateOtpSerializer(data=request.data)
@@ -106,6 +114,7 @@ class GenerateOtpView(APIView):
 
 class VerifyOTPView(APIView):
     """Verify the given OTP."""
+
     @extend_schema(request=ValidateOtpSerializer, responses=None)
     def post(self, request, *args, **kwargs):
         serializer = ValidateOtpSerializer(data=request.data)
@@ -137,7 +146,12 @@ class VerifyOTPView(APIView):
             })
 
 
+""" This view is for development purpose. """
 class ListAllUserView(ListAPIView):
+    """
+    View to list all users.
+    """
+
     serializer_class = UserSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [permissions.IsAuthenticated]
