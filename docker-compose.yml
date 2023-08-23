@@ -21,6 +21,7 @@ services:
       - DB_PASS=devtest
     depends_on:
       - db
+      - redis
 
   db:
     image: postgres:16beta2-alpine3.18
@@ -31,6 +32,12 @@ services:
       - POSTGRES_USER=devuser
       - POSTGRES_PASSWORD=devtest
 
+  redis:
+    image: redis:alpine3.18
+    expose:
+      - 6379
+
 volumes:
   dev-db-data:
   dev-static-data:
+

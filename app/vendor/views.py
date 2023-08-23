@@ -5,6 +5,7 @@ Views to manage Vendor related business logics.
 from rest_framework import permissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from drf_spectacular.utils import extend_schema
+from django.core.cache import cache
 from rest_framework.response import Response
 from product.models import (
     Product,
@@ -264,6 +265,8 @@ class ListCreateImageView(ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]"""
 
     def get(self, request, format=None):
+        cache.set('my_key', 'This works', 60)
+        print(cache.get('my_key'))
         color_list = Product_Image.objects.all()
         serializer = ImageSerializer(color_list, many=True)
         return Response(serializer.data)

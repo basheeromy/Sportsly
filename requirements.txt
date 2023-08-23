@@ -8,3 +8,4 @@ django-cors-headers>=4.2.0,<4.3
 requests>=2.31.0,<2.32
 django-environ>=0.10.0,<0.11
 Pillow>=10.0.0,<10.1
+redis>=5.0.0,<5.1

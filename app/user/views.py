@@ -1,5 +1,6 @@
 """Views for the Create user API"""
 
+from django.core.cache import cache
 from rest_framework import permissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
@@ -70,7 +71,6 @@ def send_otp(phone):
         #link = f'https://2factor.in/API/V1/{settings.OTP_API_KEY}/SMS/+91{phone}/{otp}/OTP-1' # noqa
         #result = requests.get(link, verify=False)
         #print(result)
-        print(otp)
         return otp
     else:
         return False
@@ -86,10 +86,10 @@ class GenerateOtpView(APIView):
             phone_number = serializer.validated_data.get('mobile')
             mobile = str(phone_number)
 
-            data = get_user_model().objects.get(mobile__iexact=mobile)
+
             new_otp = send_otp(mobile)
-            data.otp = new_otp
-            data.save()
+            cache.set(mobile, new_otp, 600)
+            print(cache.get(mobile))
 
             return Response({
                 'message': 'OTP sent successfully.',
@@ -117,7 +117,7 @@ class VerifyOTPView(APIView):
 
             print(user.name)
             otp = request.data.get('otp')
-            if user.otp == otp:
+            if cache.get(user.mobile) == otp:
                 user.is_active = True
                 user.save()
                 return Response({

@@ -209,3 +209,10 @@ OTP_API_KEY = env('OTP_API_KEY')
 SPECTACULAR_SETTINGS = {
     'COMPONENT_SPLIT_REQUEST': True,
 }
+
+CACHES = {
+    "default": {
+        "BACKEND": 'django.core.cache.backends.redis.RedisCache',
+        "LOCATION": 'redis://redis:6379',
+    }
+}
