@@ -36,6 +36,7 @@ from vendor.serializers import (
     VendorSerializer
 )
 
+from permissions import custom_permissions
 
 
 class CreateVendorView(CreateAPIView):
@@ -46,9 +47,9 @@ class CreateVendorView(CreateAPIView):
 class ListCreateProductView(ListCreateAPIView):
     """List and create product."""
 
-    serializer_class = ProductSerializer
     authentication_classes = [JWTAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [custom_permissions.IsSellerUser]
+    serializer_class = ProductSerializer
 
     def get(self, request, format=None):
         product = Product.objects.filter(seller=request.user)
@@ -59,7 +60,7 @@ class ListCreateProductView(ListCreateAPIView):
 
 class UpdateProductView(UpdateAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [custom_permissions.IsSellerUser]
     serializer_class = ProductSerializer
     queryset = Product.objects.filter()
 
@@ -93,21 +94,23 @@ class UpdateProductView(UpdateAPIView):
         else:
             return Response({"message": "failed"})
 
+
 class ListCreateCategoryView(ListCreateAPIView):
     """List available categories and Create new category"""
 
-    serializer_class = CategorySerializer
     authentication_classes = [JWTAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [custom_permissions.IsSellerUser]
+    serializer_class = CategorySerializer
 
     def get(self, request, format=None):
         category_list = Category.objects.all()
         serializer = CategorySerializer(category_list, many=True)
         return Response(serializer.data)
 
+
 class UpdateCategoryView(UpdateAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [custom_permissions.IsSellerUser]
     serializer_class = CategorySerializer
     queryset = Category.objects.filter()
 
@@ -144,10 +147,9 @@ class UpdateCategoryView(UpdateAPIView):
 
 class ListCreateSizeView(ListCreateAPIView):
     """List and create size."""
-
-    serializer_class = SizeSerializer
     authentication_classes = [JWTAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [custom_permissions.IsSellerUser]
+    serializer_class = SizeSerializer
 
     def get(self, request, format=None):
         category_list = Size.objects.all()
@@ -158,7 +160,7 @@ class ListCreateSizeView(ListCreateAPIView):
 class UpdateSizeView(UpdateAPIView):
     """Update Size."""
     authentication_classes = [JWTAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [custom_permissions.IsSellerUser]
     serializer_class = SizeSerializer
     queryset = Size.objects.filter()
 
@@ -197,9 +199,9 @@ class UpdateSizeView(UpdateAPIView):
 class ListCreateColorView(ListCreateAPIView):
     """List and create color."""
 
-    serializer_class = ColorSerializer
     authentication_classes = [JWTAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [custom_permissions.IsSellerUser]
+    serializer_class = ColorSerializer
 
     def get(self, request, format=None):
         color_list = Color.objects.all()
@@ -210,7 +212,7 @@ class ListCreateColorView(ListCreateAPIView):
 class UpdateColorView(UpdateAPIView):
     """Update Color."""
     authentication_classes = [JWTAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [custom_permissions.IsSellerUser]
     serializer_class = ColorSerializer
     queryset = Color.objects.filter()
 
@@ -246,27 +248,16 @@ class UpdateColorView(UpdateAPIView):
             return Response({"message": "failed"})
 
 
-class ListImageView(ListAPIView):
-    serializer_class = ImageSerializer
-    """authentication_classes = [JWTAuthentication]
-    permission_classes = [permissions.IsAuthenticated]"""
-
-    @extend_schema(request=ImageSerializer, responses=None)
-    def get(self, request, format=None):
-        users = Product_Image.objects.all()
-        serializer = ImageSerializer(users, many=True)
-
-        return Response(serializer.data)
-
 class ListCreateImageView(ListCreateAPIView):
+    """
+    View to list and upload images.
+    """
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [custom_permissions.IsSellerUser]
     serializer_class = ImageSerializer
     queryset = Product_Image.objects.all()
-    """authentication_classes = [JWTAuthentication]
-    permission_classes = [permissions.IsAuthenticated]"""
 
     def get(self, request, format=None):
-        cache.set('my_key', 'This works', 60)
-        print(cache.get('my_key'))
         color_list = Product_Image.objects.all()
         serializer = ImageSerializer(color_list, many=True)
         return Response(serializer.data)

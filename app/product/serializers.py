@@ -24,8 +24,6 @@ class ProductSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         """Create and return a new product"""
         user = (self.context['request']).user
-        if user.is_seller == False:
-            raise serializers.ValidationError("Register as a seller.")
         product = Product(
             name = validated_data['name'],
             description = validated_data['description'],
@@ -52,9 +50,6 @@ class CategorySerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """Create and return new category"""
-        user = (self.context['request']).user
-        if user.is_seller == False:
-            raise serializers.ValidationError("Register as a seller.")
 
         category = Category(
             name = validated_data['name'],
@@ -80,10 +75,6 @@ class SizeSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         """Create and return new size."""
 
-        user = (self.context['request']).user
-        if user.is_seller == False:
-            raise serializers.ValidationError("Register as a seller.")
-
         size = Size(
             name = validated_data['name'],
         )
@@ -105,10 +96,6 @@ class ColorSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """Create and return new color."""
-
-        user = (self.context['request']).user
-        if user.is_seller == False:
-            raise serializers.ValidationError("Register as a seller.")
 
         color = Color(
             name = validated_data['name']
@@ -132,10 +119,6 @@ class ImageSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """Create and return new color."""
-
-        user = (self.context['request']).user
-        if user.is_seller == False:
-            raise serializers.ValidationError("Register as a seller.")
 
         image = Product_Image(
             name = validated_data['name'],
