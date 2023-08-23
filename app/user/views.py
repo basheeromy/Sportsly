@@ -129,6 +129,7 @@ class VerifyOTPView(APIView):
             if cache.get(user.mobile) == otp:
                 user.is_active = True
                 user.save()
+                cache.delete(user.mobile)
                 return Response({
                     'message': 'OTP verification successful.',
                     'status': HTTP_200_OK,
