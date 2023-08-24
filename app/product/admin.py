@@ -1,6 +1,5 @@
 from django.contrib import admin
 from product import models
-from django.utils.text import slugify
 
 class Product_Item_Admin(admin.ModelAdmin):
     """Custom admin for product_items."""
