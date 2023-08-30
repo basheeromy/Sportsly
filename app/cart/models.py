@@ -7,7 +7,7 @@ from core.models import User
 
 from django.core.validators import MinValueValidator
 
-class CartItems(models.Model):
+class CartItem(models.Model):
     """
     Model to manage cart items
     """
