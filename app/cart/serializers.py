@@ -40,6 +40,14 @@ class CartSerializer(serializers.ModelSerializer):
 
 
 
+class CartUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CartItem
+        fields = [
+            'quantity'
+        ]
+
+        
 class WishListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Wishlist

@@ -4,8 +4,12 @@ from django.urls import path
 
 from cart.views import (
     AddCartItemView,
+    UpdateDeleteCartItem
 )
+"""path('delete_item', DeleteCartItem.as_view(), name="delete_cart_item")
+path('update_item', UpdateCartView.as_view(), name="add_to_cart"),"""
 
 urlpatterns = [
     path('add_item', AddCartItemView.as_view(), name="add_to_cart"),
+    path('update_item/<int:id>', UpdateDeleteCartItem.as_view(), name="delete_cart_item")
 ]
