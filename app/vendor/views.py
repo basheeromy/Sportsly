@@ -66,7 +66,7 @@ class UpdateProductView(UpdateAPIView):
             id = self.request.data['id']
             instance = Product.objects.get(id=id)
             return instance
-        except:
+        except Product.DoesNotExist:
             return False
 
     def update(self, request, *args, **kwargs):
@@ -74,17 +74,21 @@ class UpdateProductView(UpdateAPIView):
 
         instance = self.get_object()
         if instance is False:
-            return Response({'message': 'Id not provided or wrong id',
-                             'status':HTTP_400_BAD_REQUEST
-                            }, 400)
+            return Response(
+                {
+                    'message':
+                        'Id not provided or wrong id',
+                },
+                status=HTTP_400_BAD_REQUEST
+            )
 
         data = request.data
-        serializer = self.get_serializer(instance, data, partial=True )
+        serializer = self.get_serializer(instance, data, partial=True)
         if serializer.is_valid():
             self.perform_update(serializer)
             return Response(
                 {"message": "product updated successfully",
-                 "data":serializer.data}
+                 "data": serializer.data}
             )
         else:
             return Response({"message": "failed"})
@@ -116,7 +120,7 @@ class UpdateCategoryView(UpdateAPIView):
             id = self.request.data['id']
             instance = Category.objects.get(id=id)
             return instance
-        except:
+        except Category.DoesNotExist:
             return False
 
     def update(self, request, *args, **kwargs):
@@ -124,17 +128,21 @@ class UpdateCategoryView(UpdateAPIView):
 
         instance = self.get_object()
         if instance is False:
-            return Response({'message': 'Id not provided or wrong id',
-
-                            }, status = HTTP_400_BAD_REQUEST)
+            return Response(
+                {
+                    'message':
+                        'Id not provided or wrong id',
+                },
+                status=HTTP_400_BAD_REQUEST
+            )
 
         data = request.data
-        serializer = self.get_serializer(instance, data, partial=True )
+        serializer = self.get_serializer(instance, data, partial=True)
         if serializer.is_valid():
             self.perform_update(serializer)
             return Response(
                 {"message": "category updated successfully",
-                 "data":serializer.data}
+                 "data": serializer.data}
             )
         else:
             return Response({"message": "failed"})
@@ -166,26 +174,29 @@ class UpdateSizeView(UpdateAPIView):
             id = self.request.data['id']
             instance = Size.objects.get(id=id)
             return instance
-        except:
+        except Size.DoesNotExist:
             return False
-
 
     def update(self, request, *args, **kwargs):
         """Update a category."""
 
         instance = self.get_object()
         if instance is False:
-            return Response({'message': 'Id not provided or wrong id',
-                             'status':HTTP_400_BAD_REQUEST
-                            }, 400)
+            return Response(
+                {
+                    'message':
+                        'Id not provided or wrong id',
+                },
+                status=HTTP_400_BAD_REQUEST
+            )
 
         data = request.data
-        serializer = self.get_serializer(instance, data, partial=True )
+        serializer = self.get_serializer(instance, data, partial=True)
         if serializer.is_valid():
             self.perform_update(serializer)
             return Response(
                 {"message": "Size updated successfully",
-                 "data":serializer.data}
+                 "data": serializer.data}
             )
         else:
             return Response({"message": "failed"})
@@ -218,26 +229,29 @@ class UpdateColorView(UpdateAPIView):
             id = self.request.data['id']
             instance = Color.objects.get(id=id)
             return instance
-        except:
+        except Category.DoesNotExist:
             return False
-
 
     def update(self, request, *args, **kwargs):
         """Update a category."""
 
         instance = self.get_object()
         if instance is False:
-            return Response({'message': 'Id not provided or wrong id',
-                             'status':HTTP_400_BAD_REQUEST
-                            }, 400)
+            return Response(
+                {
+                    'message':
+                        'Id not provided or wrong id',
+                },
+                status=HTTP_400_BAD_REQUEST
+            )
 
         data = request.data
-        serializer = self.get_serializer(instance, data, partial=True )
+        serializer = self.get_serializer(instance, data, partial=True)
         if serializer.is_valid():
             self.perform_update(serializer)
             return Response(
                 {"message": "Color updated successfully",
-                 "data":serializer.data}
+                 "data": serializer.data}
             )
         else:
             return Response({"message": "failed"})
