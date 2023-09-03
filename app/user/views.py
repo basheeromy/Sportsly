@@ -1,9 +1,17 @@
 """Views for the Create user API"""
 
+from django.shortcuts import get_object_or_404
 from django.core.cache import cache
 from rest_framework import permissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
+from rest_framework.generics import (
+    CreateAPIView,
+    RetrieveUpdateDestroyAPIView,
+    ListAPIView,
+    ListCreateAPIView
+)
+
+from permissions.custom_permissions import IsOwnerOrReadOnly
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -13,11 +21,13 @@ from rest_framework.status import (
 )
 from django.conf import settings
 
+from user.models import Address
 from user.serializers import (
     UserSerializer,
     GenerateOtpSerializer,
     ValidateOtpSerializer,
-    GenerateTokenSerializer
+    GenerateTokenSerializer,
+    AddressSerializer
     )
 from django.contrib.auth import get_user_model
 
@@ -163,3 +173,35 @@ class ListAllUserView(ListAPIView):
         serializer = UserSerializer(users, many=True)
 
         return Response(serializer.data)
+
+class ListAddAddressView(ListCreateAPIView):
+    """View to add items to cart and list cart items"""
+
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = AddressSerializer
+    queryset = Address.objects.filter()
+
+    def get(self, request, format=None):
+        product = Address.objects.filter(user=request.user)
+        serializer = AddressSerializer(product, many=True)
+
+        return Response(serializer.data)
+
+
+class UpdateDeleteAddressView(RetrieveUpdateDestroyAPIView):
+
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [
+        permissions.IsAuthenticated,
+        IsOwnerOrReadOnly
+
+    ]
+    queryset = Address.objects.all()
+    serializer_class = AddressSerializer
+    lookup_field = 'id'
+
+    def get_object(self):
+        obj = get_object_or_404(self.get_queryset(), pk=self.kwargs["id"])
+        self.check_object_permissions(self.request, obj)
+        return obj

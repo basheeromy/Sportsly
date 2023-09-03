@@ -13,7 +13,10 @@ from user.views import (
     VerifyOTPView,
     GenerateTokenView,
     ManageUserView,
-    ListAllUserView
+    ListAllUserView,
+    ListAddAddressView,
+    UpdateDeleteAddressView
+
 
 )
 
@@ -29,4 +32,6 @@ urlpatterns = [
     path('generate-otp/', GenerateOtpView.as_view(), name='generate_otp'),
     path('verify-otp/', VerifyOTPView.as_view(), name='verify_otp'),
     path('list-all-user', ListAllUserView.as_view(), name='list_all_user'),
+    path('list-create-address/', ListAddAddressView.as_view(), name='add_list_adress'),
+    path('update-delete-address/<int:id>', UpdateDeleteAddressView.as_view(), name='update_delete_address'),
 ]

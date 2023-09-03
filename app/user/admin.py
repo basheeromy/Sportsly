@@ -1,3 +1,8 @@
-from django.contrib import admin # noqa
+# Register models for admin site
 
-# Register your models here.
+from django.contrib import admin
+
+from user.models import Address
+
+
+admin.site.register(Address)

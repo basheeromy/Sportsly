@@ -4,6 +4,8 @@ from django.contrib.auth import (get_user_model)
 
 from rest_framework import serializers
 
+from .models import Address
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -90,3 +92,49 @@ class ValidateOtpSerializer(serializers.Serializer):
             )
 
         return user
+
+
+class AddressSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Address
+        fields = [
+            'id',
+            'first_name',
+            'last_name',
+            'user',
+            'company_name',
+            'apartment',
+            'street',
+            'town',
+            'state',
+            'pin',
+            'mobile',
+            'secondary_mob',
+            'additional_info'
+        ]
+        extra_kwargs = {
+            'user': {'read_only': True},
+            'id': {'read_only': True}
+        }
+
+    def create(self, validated_data):
+        """Create and return new address set for user."""
+        user = (self.context['request']).user
+        address = Address(
+            first_name = validated_data['first_name'],
+            last_name = validated_data['last_name'],
+            user = user,
+            company_name = validated_data['company_name'],
+            apartment = validated_data['apartment'],
+            street = validated_data['street'],
+            town = validated_data['town'],
+            state = validated_data['state'],
+            pin = validated_data['pin'],
+            mobile = validated_data['mobile'],
+            secondary_mob = validated_data['secondary_mob'],
+            additional_info = validated_data['additional_info'],
+        )
+        address.save()
+
+        return address
