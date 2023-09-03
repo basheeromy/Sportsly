@@ -98,21 +98,7 @@ class AddressSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Address
-        fields = [
-            'id',
-            'first_name',
-            'last_name',
-            'user',
-            'company_name',
-            'apartment',
-            'street',
-            'town',
-            'state',
-            'pin',
-            'mobile',
-            'secondary_mob',
-            'additional_info'
-        ]
+        fields = '__all__'
         extra_kwargs = {
             'user': {'read_only': True},
             'id': {'read_only': True}
