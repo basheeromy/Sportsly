@@ -59,8 +59,7 @@ class Product_item(models.Model):
     """Model to manage variants of a particular product"""
     name = models.ForeignKey(
         Product, on_delete=models.CASCADE,
-        related_name="products",
-        verbose_name="Product_name"
+        related_name="productitem_set"
     )
     SKU = models.CharField(max_length=100, unique=True)
     size = models.ForeignKey(Size, on_delete=models.CASCADE)
