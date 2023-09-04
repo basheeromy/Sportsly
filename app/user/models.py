@@ -26,3 +26,17 @@ class Address(models.Model):
     mobile = models.CharField(max_length=15)
     secondary_mob = models.CharField(max_length=15)
     additional_info = models.TextField(null=True, blank=True)
+
+
+class BillingAddress(models.Model):
+    """Manage deleivery address"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Link the billing address to a user
+    street_address = models.CharField(max_length=255)
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    postal_code = models.CharField(max_length=20)
+    country = models.CharField(max_length=100)
+    gst_number = models.CharField(max_length=15)
+
+    def __str__(self):
+        return f"{self.user.username}'s Billing Address"
