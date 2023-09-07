@@ -6,7 +6,10 @@ from order.models import (
     OrderItem
 )
 from product.models import Product_item
-from user.models import Address
+from user.models import (
+    Address,
+    BillingAddress
+)
 
 
 class SpecialSerializer(serializers.Serializer):
@@ -23,6 +26,9 @@ class SpecialSerializer(serializers.Serializer):
     )
     shipping_address = serializers.PrimaryKeyRelatedField(
         queryset=Address.objects.all()
+    )
+    billing_address = serializers.PrimaryKeyRelatedField(
+        queryset=BillingAddress.objects.all()
     )
     payment_mode = serializers.ChoiceField(choices=Order.PAYMENT_MODES)
 
