@@ -60,6 +60,8 @@ INSTALLED_APPS = [
     'vendor',
     'cart',
     'order',
+    'django_celery_results',
+    'django_celery_beat'
 ]
 
 MIDDLEWARE = [
@@ -218,3 +220,7 @@ CACHES = {
         "LOCATION": 'redis://redis:6379',
     }
 }
+
+CELERY_BROKER_URL = 'amqp://rabbitmq_user:rabbitmq_pass@rabbitmq:5672/rabbitmq_vhost'
+#CELERY_RESULT_BACKEND = 'default'
+#CELERY_CACHE_BACKEND = 'default'

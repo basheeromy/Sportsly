@@ -1,10 +1,12 @@
 version: '3.9'
 services:
   app:
+    restart: always
     build:
       context: .
       args:
         - DEV=true
+    image: django_app
     ports:
       - "8000:8000"
     volumes:
@@ -24,6 +26,7 @@ services:
       - redis
 
   db:
+    restart: always
     image: postgres:16beta2-alpine3.18
     volumes:
       - dev-db-data:/var/lib/postgresql/data
@@ -33,11 +36,78 @@ services:
       - POSTGRES_PASSWORD=devtest
 
   redis:
+    restart: always
     image: redis:alpine3.18
     expose:
       - 6379
 
+  rabbitmq:
+
+    restart: always
+    image: rabbitmq:3.12.4-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=rabbitmq_user
+      - RABBITMQ_DEFAULT_PASS=rabbitmq_pass
+      - RABBITMQ_DEFAULT_VHOST=rabbitmq_vhost
+
+  celery_worker:
+    restart: always
+    build:
+      context: .
+    image: django_celery_worker
+    command: sh -c "python manage.py migrate django_celery_results &&
+                    celery -A app worker -l INFO"
+    volumes:
+      - ./app:/app
+    environment:
+      - DB_HOST=db
+      - DB_NAME=devdb
+      - DB_USER=devuser
+      - DB_PASS=devtest
+    depends_on:
+      - db
+      - rabbitmq
+      - app
+
+  celery_beat:
+    restart: always
+    build:
+      context: .
+    image: django_celery_beat
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py start_celery_beat"
+    volumes:
+      - ./app:/app
+    environment:
+      - DB_HOST=db
+      - DB_NAME=devdb
+      - DB_USER=devuser
+      - DB_PASS=devtest
+    depends_on:
+      - rabbitmq
+      - db
+      - app
+
+  flower:
+    restart: always
+    build:
+      context: .
+    image: django_celery_flower
+    command: >
+      sh -c "python manage.py start_flower"
+    volumes:
+      - ./app:/app
+    ports:
+      - 5557:5555
+    depends_on:
+      - celery_worker
+      - rabbitmq
+      - db
+
 volumes:
   dev-db-data:
   dev-static-data:
-

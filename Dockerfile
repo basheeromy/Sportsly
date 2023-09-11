@@ -1,4 +1,4 @@
-FROM python:3.12.0b3-alpine3.18
+FROM python:3.11.5-alpine3.18
 
 LABEL maintainer="Basheer"
 
