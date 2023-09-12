@@ -28,7 +28,9 @@ class UserSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 class GenerateTokenSerializer(serializers.Serializer):
-
+    """
+    Serializer to take input for generating token.
+    """
     email = serializers.EmailField()
     password = serializers.CharField()
 

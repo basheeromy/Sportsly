@@ -11,6 +11,8 @@ from rest_framework.generics import (
     ListCreateAPIView
 )
 
+from .task import send_otp
+
 from permissions.custom_permissions import IsOwnerOrReadOnly
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -32,7 +34,7 @@ from user.serializers import (
 from django.contrib.auth import get_user_model
 
 from drf_spectacular.utils import extend_schema
-import requests
+
 import math
 import random
 
@@ -65,30 +67,6 @@ class GenerateTokenView(APIView):
                          'access': str(refresh.access_token),
         })
 
-def send_otp(phone):
-    """
-    This is an helper function to send otp to phone number
-    passed as an argument to this function.
-
-    Args:
-        phone (string): mobile to send otp to.
-    """
-
-    if phone:
-
-        digits = "0123456789"
-        otp = ""
-        for i in range(6):
-            otp += digits[math.floor(random.random() * 10)]
-
-        phone = str(phone)
-        #link = f'https://2factor.in/API/V1/{settings.OTP_API_KEY}/SMS/+91{phone}/{otp}/OTP-1' # noqa
-        #result = requests.get(link, verify=False)
-        #print(result)
-        return otp
-    else:
-        return False
-
 
 class GenerateOtpView(APIView):
     """
@@ -103,11 +81,13 @@ class GenerateOtpView(APIView):
         try:
             phone_number = serializer.validated_data.get('mobile')
             mobile = str(phone_number)
+            digits = "0123456789"
+            otp = ""
+            for i in range(6):
+                otp += digits[math.floor(random.random() * 10)]
 
-
-            new_otp = send_otp(mobile)
-            cache.set(mobile, new_otp, 600)
-            print(cache.get(mobile))
+            send_otp.delay(mobile, otp)
+            cache.set(mobile, otp, 600)
 
             return Response({
                 'message': 'OTP sent successfully.',

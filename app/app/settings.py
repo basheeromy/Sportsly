@@ -224,3 +224,5 @@ CACHES = {
 CELERY_BROKER_URL = 'amqp://rabbitmq_user:rabbitmq_pass@rabbitmq:5672/rabbitmq_vhost'
 #CELERY_RESULT_BACKEND = 'default'
 #CELERY_CACHE_BACKEND = 'default'
+
+CELERY_IMPORTS = ("user.task",)
