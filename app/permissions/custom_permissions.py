@@ -1,7 +1,7 @@
 """Define Custom permissions."""
 
 from rest_framework.permissions import BasePermission
-
+from django.contrib.auth.models import AnonymousUser
 
 class IsSellerUser(BasePermission):
     """
@@ -9,6 +9,8 @@ class IsSellerUser(BasePermission):
     """
 
     def has_permission(self, request, view):
+        if request.user.id == None:
+            return False
         return bool(request.user and request.user.is_seller)
 
 
