@@ -144,8 +144,8 @@ class ListAllUserView(ListAPIView):
     """
 
     serializer_class = UserSerializer
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
+    """authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]"""
 
     @extend_schema(request=UserSerializer, responses=None)
     def get(self, request, format=None):
