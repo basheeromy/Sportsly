@@ -6,6 +6,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.response import Response
 from product.models import (
     Product,
+    Product_item,
     Category,
     Size,
     Color,
@@ -22,6 +23,8 @@ from rest_framework.status import (
 
 from product.serializers import (
     ProductSerializer,
+    ProductItemSerializer,
+    ProductItemListSerializer,
     CategorySerializer,
     SizeSerializer,
     ColorSerializer,
@@ -49,6 +52,33 @@ class ListCreateProductView(ListCreateAPIView):
     def get(self, request, format=None):
         product = Product.objects.filter(seller=request.user)
         serializer = ProductSerializer(product, many=True)
+
+        return Response(serializer.data)
+
+
+class ListCreateProductItemView(ListCreateAPIView):
+    """List and create product."""
+
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [custom_permissions.IsSellerUser]
+    serializer_class = ProductItemSerializer
+    queryset = Product_item.objects.select_related(
+            'name'
+        ).filter()
+
+    def get_serializer_class(self):
+        # choose serializer class based on request method.
+
+        if self.request.method == 'POST':
+            return ProductItemSerializer
+        return ProductItemListSerializer
+
+    def get(self, request, format=None):
+        product = Product_item.objects.select_related(
+            'name'
+        ).filter(name__seller=request.user)
+
+        serializer = ProductItemListSerializer(product, many=True)
 
         return Response(serializer.data)
 

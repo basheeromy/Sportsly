@@ -74,8 +74,8 @@ class Product_item(models.Model):
         default=0,
         validators=[MinValueValidator(0)]
     )
-    created_on = models.DateField(editable=False)
-    updated_on = models.DateField(editable=False)
+    created_on = models.DateTimeField(editable=False)
+    updated_on = models.DateTimeField(editable=False)
     is_active = models.BooleanField(default=True)
     coupen = models.CharField(max_length=200, null=True, blank=True)
 

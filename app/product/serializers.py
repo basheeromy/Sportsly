@@ -2,6 +2,7 @@
 from rest_framework import serializers
 from .models import (
     Product,
+    Product_item,
     Category,
     Size,
     Color,
@@ -34,6 +35,64 @@ class ProductSerializer(serializers.ModelSerializer):
         product.category.set(validated_data['category'])
         product.save()
         return product
+
+
+class ProductItemListSerializer(serializers.ModelSerializer):
+    name = serializers.StringRelatedField()
+    size = serializers.StringRelatedField()
+    color = serializers.StringRelatedField()
+
+
+    class Meta:
+        model = Product_item
+        fields = '__all__'
+
+
+class ProductItemSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Product_item
+        fields = [
+            'id',
+            'name',
+            'SKU',
+            'size',
+            'color',
+            'price',
+            'quantity',
+            'discount',
+            'created_on',
+            'updated_on',
+            'is_active',
+            'coupen'
+        ]
+        extra_kwargs = {
+            'created_on': {
+                'required': False,
+                'read_only': True
+            },
+            'updated_on': {
+                'required': False,
+                'read_only': True
+            },
+        }
+
+    def create(self, validated_data):
+        """Create and return a new product_item."""
+        product_item = Product_item(
+            name = validated_data['name'],
+            SKU = validated_data['SKU'],
+            size = validated_data['size'],
+            color = validated_data['color'],
+            price = validated_data['price'],
+            quantity = validated_data['quantity'],
+            discount = validated_data['discount'],
+            is_active = validated_data['is_active'],
+            coupen = validated_data['coupen']
+        )
+        product_item.save()
+        return product_item
+
 
 class CategorySerializer(serializers.ModelSerializer):
     """Serializer to manage category."""

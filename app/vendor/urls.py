@@ -4,6 +4,7 @@ from django.urls import path
 from vendor.views import (
     CreateVendorView,
     ListCreateProductView,
+    ListCreateProductItemView,
     UpdateProductView,
     ListCreateCategoryView,
     UpdateCategoryView,
@@ -17,6 +18,7 @@ from vendor.views import (
 urlpatterns = [
     path('create/', CreateVendorView.as_view(), name='create_vendor'),
     path('list-create-product', ListCreateProductView.as_view(), name='list-create-product'),
+    path('list-create-product-item', ListCreateProductItemView.as_view(), name='list-create-product-item'),
     path('update-product', UpdateProductView.as_view(), name='update-product'),
     path('list-create-category', ListCreateCategoryView.as_view(), name='list-create-category'),
     path('update-category', UpdateCategoryView.as_view(), name='update-category'),
