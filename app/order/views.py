@@ -41,7 +41,7 @@ class OrderAndOrderItemListCreateAPIView(ListCreateAPIView):
 
     def create(self, request, *args, **kwargs):
         "handle order placement."
-        
+
         try:
             products = request.data.get('products').split(',')
             quantity = json.loads(request.data.get('quantity'))
@@ -68,7 +68,10 @@ class OrderAndOrderItemListCreateAPIView(ListCreateAPIView):
             # save order instance.
             order.save()
 
+            total_price = 0.00
+
             # Careate order items instances.
+            print(products)
             for product in products:
 
                 product_quantity = quantity[product]
@@ -103,21 +106,19 @@ class OrderAndOrderItemListCreateAPIView(ListCreateAPIView):
                 # save order item instance.
                 order_item.save()
 
-                # edit order instance to update total price.
-                order.price += float(price)
+                # update total price.
+                total_price += float(price)
 
-                # save order instance with changes.
-                order.save()
+            # edit order instance to update total price.
+            order.price = total_price
 
-            """res = json.dumps(
-                order,
-                default=lambda o: o.__dict__,
-                sort_keys=True,
-                indent=4
-            )"""
+            # save order instance with changes.
+            order.save()
+
             return Response(
                 "Order Placed Successfully", status=status.HTTP_201_CREATED
             )
+
 
         except ValueError as e:
             return Response(

@@ -2,6 +2,8 @@
 Models to manage order related functionalities.
 """
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.core.validators import MinValueValidator
 
 from core.models import User
@@ -32,7 +34,7 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     """Model to manage order items"""
-    
+
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="orderitem_set")
     seller = models.ForeignKey(User, on_delete=models.PROTECT, related_name="Seller")
     product = models.ForeignKey(Product_item, on_delete=models.PROTECT)
@@ -41,3 +43,9 @@ class OrderItem(models.Model):
             validators=[MinValueValidator(0)]
             )
     price = models.DecimalField(max_digits=10, decimal_places=2)
+
+
+@receiver(post_save, sender=OrderItem)
+def created_user(sender, created, instance, **kwargs):
+    if created:
+        print(f"new order for {instance.product} created successfully. sender is {sender}")
