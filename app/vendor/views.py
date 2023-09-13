@@ -2,8 +2,10 @@
 Views to manage Vendor related business logics.
 """
 
+from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.response import Response
+from rest_framework import permissions
 from product.models import (
     Product,
     Product_item,
@@ -16,6 +18,7 @@ from rest_framework.generics import (
     CreateAPIView,
     UpdateAPIView,
     ListCreateAPIView,
+    RetrieveUpdateDestroyAPIView
 )
 from rest_framework.status import (
     HTTP_400_BAD_REQUEST,
@@ -82,6 +85,22 @@ class ListCreateProductItemView(ListCreateAPIView):
 
         return Response(serializer.data)
 
+
+class RetrieveUpdateDeleteProductItemView(RetrieveUpdateDestroyAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [
+        custom_permissions.IsSellerUser,
+        #custom_permissions.IsOwnerOrReadOnly
+    ]
+    queryset = Product_item.objects.select_related(
+            'name'
+        ).filter()
+    serializer_class = ProductItemSerializer
+    lookup_field = 'id'
+
+    def get_object(self):
+        obj = get_object_or_404(self.get_queryset(), pk=self.kwargs["id"])
+        return obj
 
 class UpdateProductView(UpdateAPIView):
     authentication_classes = [JWTAuthentication]

@@ -5,6 +5,7 @@ from vendor.views import (
     CreateVendorView,
     ListCreateProductView,
     ListCreateProductItemView,
+    RetrieveUpdateDeleteProductItemView,
     UpdateProductView,
     ListCreateCategoryView,
     UpdateCategoryView,
@@ -19,6 +20,11 @@ urlpatterns = [
     path('create/', CreateVendorView.as_view(), name='create_vendor'),
     path('list-create-product', ListCreateProductView.as_view(), name='list-create-product'),
     path('list-create-product-item', ListCreateProductItemView.as_view(), name='list-create-product-item'),
+    path(
+        'update-delete-product-item/<int:id>',
+        RetrieveUpdateDeleteProductItemView.as_view(),
+        name='update-delete-product-item'
+    ),
     path('update-product', UpdateProductView.as_view(), name='update-product'),
     path('list-create-category', ListCreateCategoryView.as_view(), name='list-create-category'),
     path('update-category', UpdateCategoryView.as_view(), name='update-category'),
