@@ -15,7 +15,7 @@ class Category(models.Model):
 
     name = models.CharField(max_length=100, unique=True)
     parent = models.ForeignKey('self', on_delete=models.PROTECT, null=True, blank=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -24,7 +24,7 @@ class Category(models.Model):
 class Color(models.Model):
     """Color options for products."""
     name = models.CharField(max_length=100, unique=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -33,7 +33,7 @@ class Color(models.Model):
 class Size(models.Model):
     """Size options for products."""
     name = models.CharField(max_length=100, unique=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -44,7 +44,7 @@ class Product(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     category = models.ManyToManyField(Category, blank=True)
-    seller = models.ForeignKey(
+    owner = models.ForeignKey(
         User,
         related_name="Seller_of_product",
         on_delete=models.CASCADE
@@ -112,6 +112,6 @@ class Product_Image(models.Model):
         related_name="Product_image",
         on_delete=models.CASCADE
     )
-    created_by = models.ForeignKey(User, related_name="Uploaded_seller", on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, related_name="Uploaded_seller", on_delete=models.CASCADE)
     def __str__(self):
         return f'{self.name} image'

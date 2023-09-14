@@ -5,7 +5,6 @@ Views to manage Vendor related business logics.
 from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.response import Response
-from rest_framework import permissions
 from product.models import (
     Product,
     Product_item,
@@ -16,12 +15,8 @@ from product.models import (
 )
 from rest_framework.generics import (
     CreateAPIView,
-    UpdateAPIView,
     ListCreateAPIView,
     RetrieveUpdateDestroyAPIView
-)
-from rest_framework.status import (
-    HTTP_400_BAD_REQUEST,
 )
 
 from product.serializers import (
@@ -41,26 +36,55 @@ from permissions import custom_permissions
 
 
 class CreateVendorView(CreateAPIView):
-    """Create a new vendor."""
+    """
+    Create a new vendor.
+    """
+
     serializer_class = VendorSerializer
 
 
 class ListCreateProductView(ListCreateAPIView):
-    """List and create product."""
+    """
+    List and create product.
+    """
 
     authentication_classes = [JWTAuthentication]
     permission_classes = [custom_permissions.IsSellerUser]
     serializer_class = ProductSerializer
+    queryset = Product.objects.filter()
 
     def get(self, request, format=None):
-        product = Product.objects.filter(seller=request.user)
+        product = Product.objects.filter(owner=request.user)
         serializer = ProductSerializer(product, many=True)
 
         return Response(serializer.data)
 
 
+class UpdateDeleteProductView(RetrieveUpdateDestroyAPIView):
+    """
+    View to update and delete product.
+    """
+
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [
+        custom_permissions.IsSellerUser,
+        custom_permissions.IsSellerOrReadOnly
+    ]
+    queryset = Product.objects.filter()
+    serializer_class = ProductSerializer
+    lookup_field = 'id'
+
+    def get_object(self):
+        obj = get_object_or_404(self.get_queryset(), pk=self.kwargs["id"])
+        self.check_object_permissions(self.request, obj)
+
+        return obj
+
+
 class ListCreateProductItemView(ListCreateAPIView):
-    """List and create product."""
+    """
+    List and create product.
+    """
 
     authentication_classes = [JWTAuthentication]
     permission_classes = [custom_permissions.IsSellerUser]
@@ -79,18 +103,21 @@ class ListCreateProductItemView(ListCreateAPIView):
     def get(self, request, format=None):
         product = Product_item.objects.select_related(
             'name'
-        ).filter(name__seller=request.user)
+        ).filter(name__owner=request.user)
 
         serializer = ProductItemListSerializer(product, many=True)
 
         return Response(serializer.data)
 
 
-class RetrieveUpdateDeleteProductItemView(RetrieveUpdateDestroyAPIView):
+class UpdateDeleteProductItemView(RetrieveUpdateDestroyAPIView):
+    """
+    View to update and delete product item.
+    """
+
     authentication_classes = [JWTAuthentication]
     permission_classes = [
-        custom_permissions.IsSellerUser,
-        #custom_permissions.IsOwnerOrReadOnly
+        custom_permissions.IsSellerUser
     ]
     queryset = Product_item.objects.select_related(
             'name'
@@ -99,223 +126,179 @@ class RetrieveUpdateDeleteProductItemView(RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
 
     def get_object(self):
-        obj = get_object_or_404(self.get_queryset(), pk=self.kwargs["id"])
+        obj = get_object_or_404(
+            self.get_queryset(),
+            pk=self.kwargs["id"]
+        )
         return obj
-
-class UpdateProductView(UpdateAPIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [custom_permissions.IsSellerUser]
-    serializer_class = ProductSerializer
-    queryset = Product.objects.filter()
-
-    def get_object(self):
-
-        """Over ride get_object method"""
-        try:
-            id = self.request.data['id']
-            instance = Product.objects.get(id=id)
-            return instance
-        except Product.DoesNotExist:
-            return False
-
-    def update(self, request, *args, **kwargs):
-        """Update a product."""
-
-        instance = self.get_object()
-        if instance is False:
-            return Response(
-                {
-                    'message':
-                        'Id not provided or wrong id',
-                },
-                status=HTTP_400_BAD_REQUEST
-            )
-
-        data = request.data
-        serializer = self.get_serializer(instance, data, partial=True)
-        if serializer.is_valid():
-            self.perform_update(serializer)
-            return Response(
-                {"message": "product updated successfully",
-                 "data": serializer.data}
-            )
-        else:
-            return Response({"message": "failed"})
 
 
 class ListCreateCategoryView(ListCreateAPIView):
-    """List available categories and Create new category"""
+    """
+    List available categories and Create new category
+    """
 
     authentication_classes = [JWTAuthentication]
     permission_classes = [custom_permissions.IsSellerUser]
     serializer_class = CategorySerializer
+    queryset = Category.objects.all()
 
     def get(self, request, format=None):
-        category_list = Category.objects.all()
-        serializer = CategorySerializer(category_list, many=True)
+        serializer = CategorySerializer(
+            self.get_queryset(),
+            many=True
+        )
         return Response(serializer.data)
 
 
-class UpdateCategoryView(UpdateAPIView):
+class UpdateDeleteCategoryView(RetrieveUpdateDestroyAPIView):
+    """
+    View to update and delete Category.
+    """
+
     authentication_classes = [JWTAuthentication]
-    permission_classes = [custom_permissions.IsSellerUser]
-    serializer_class = CategorySerializer
+    permission_classes = [
+        custom_permissions.IsSellerUser,
+        custom_permissions.IsSellerOrReadOnly
+    ]
     queryset = Category.objects.filter()
+    serializer_class = CategorySerializer
+    lookup_field = 'id'
 
     def get_object(self):
+        obj = get_object_or_404(
+            self.get_queryset(),
+            pk=self.kwargs["id"]
+        )
+        self.check_object_permissions(self.request, obj)
 
-        """Over ride get_object method"""
-        try:
-            id = self.request.data['id']
-            instance = Category.objects.get(id=id)
-            return instance
-        except Category.DoesNotExist:
-            return False
-
-    def update(self, request, *args, **kwargs):
-        """Update a category."""
-
-        instance = self.get_object()
-        if instance is False:
-            return Response(
-                {
-                    'message':
-                        'Id not provided or wrong id',
-                },
-                status=HTTP_400_BAD_REQUEST
-            )
-
-        data = request.data
-        serializer = self.get_serializer(instance, data, partial=True)
-        if serializer.is_valid():
-            self.perform_update(serializer)
-            return Response(
-                {"message": "category updated successfully",
-                 "data": serializer.data}
-            )
-        else:
-            return Response({"message": "failed"})
+        return obj
 
 
 class ListCreateSizeView(ListCreateAPIView):
-    """List and create size."""
+    """
+    List and create size.
+    """
+
     authentication_classes = [JWTAuthentication]
     permission_classes = [custom_permissions.IsSellerUser]
     serializer_class = SizeSerializer
+    queryset = Size.objects.all()
 
     def get(self, request, format=None):
-        category_list = Size.objects.all()
-        serializer = SizeSerializer(category_list, many=True)
+        serializer = SizeSerializer(
+            self.get_queryset(),
+            many=True
+        )
         return Response(serializer.data)
 
 
-class UpdateSizeView(UpdateAPIView):
-    """Update Size."""
+class UpdateDeleteSizeView(RetrieveUpdateDestroyAPIView):
+    """
+    View to update and delete Size.
+    """
+
     authentication_classes = [JWTAuthentication]
-    permission_classes = [custom_permissions.IsSellerUser]
-    serializer_class = SizeSerializer
+    permission_classes = [
+        custom_permissions.IsSellerUser,
+        custom_permissions.IsSellerOrReadOnly
+    ]
     queryset = Size.objects.filter()
+    serializer_class = SizeSerializer
+    lookup_field = 'id'
 
     def get_object(self):
+        obj = get_object_or_404(
+            self.get_queryset(),
+            pk=self.kwargs["id"]
+        )
+        self.check_object_permissions(self.request, obj)
 
-        """Over ride get_object method"""
-        try:
-            id = self.request.data['id']
-            instance = Size.objects.get(id=id)
-            return instance
-        except Size.DoesNotExist:
-            return False
-
-    def update(self, request, *args, **kwargs):
-        """Update a category."""
-
-        instance = self.get_object()
-        if instance is False:
-            return Response(
-                {
-                    'message':
-                        'Id not provided or wrong id',
-                },
-                status=HTTP_400_BAD_REQUEST
-            )
-
-        data = request.data
-        serializer = self.get_serializer(instance, data, partial=True)
-        if serializer.is_valid():
-            self.perform_update(serializer)
-            return Response(
-                {"message": "Size updated successfully",
-                 "data": serializer.data}
-            )
-        else:
-            return Response({"message": "failed"})
+        return obj
 
 
 class ListCreateColorView(ListCreateAPIView):
-    """List and create color."""
+    """
+    List and create color.
+    """
 
     authentication_classes = [JWTAuthentication]
     permission_classes = [custom_permissions.IsSellerUser]
     serializer_class = ColorSerializer
+    queryset = Color.objects.all()
 
     def get(self, request, format=None):
-        color_list = Color.objects.all()
-        serializer = ColorSerializer(color_list, many=True)
+        serializer = ColorSerializer(
+            self.get_queryset(),
+            many=True
+        )
         return Response(serializer.data)
 
 
-class UpdateColorView(UpdateAPIView):
-    """Update Color."""
+class UpdateDeleteColorView(RetrieveUpdateDestroyAPIView):
+    """
+    View to update and delete color.
+    """
+
     authentication_classes = [JWTAuthentication]
-    permission_classes = [custom_permissions.IsSellerUser]
-    serializer_class = ColorSerializer
+    permission_classes = [
+        custom_permissions.IsSellerUser,
+        custom_permissions.IsSellerOrReadOnly
+    ]
     queryset = Color.objects.filter()
+    serializer_class = ColorSerializer
+    lookup_field = 'id'
 
     def get_object(self):
-        """Over ride get_object method"""
+        obj = get_object_or_404(
+            self.get_queryset(),
+            pk=self.kwargs["id"]
+        )
+        self.check_object_permissions(self.request, obj)
 
-        try:
-            id = self.request.data['id']
-            instance = Color.objects.get(id=id)
-            return instance
-        except Category.DoesNotExist:
-            return False
-
-    def update(self, request, *args, **kwargs):
-        """Update a category."""
-
-        instance = self.get_object()
-        if instance is False:
-            return Response(
-                {
-                    'message':
-                        'Id not provided or wrong id',
-                },
-                status=HTTP_400_BAD_REQUEST
-            )
-
-        data = request.data
-        serializer = self.get_serializer(instance, data, partial=True)
-        if serializer.is_valid():
-            self.perform_update(serializer)
-            return Response(
-                {"message": "Color updated successfully",
-                 "data": serializer.data}
-            )
-        else:
-            return Response({"message": "failed"})
+        return obj
 
 
 class ListCreateImageView(ListCreateAPIView):
     """
     View to list and upload images.
     """
+
     authentication_classes = [JWTAuthentication]
     permission_classes = [custom_permissions.IsSellerUser]
     serializer_class = ImageSerializer
     queryset = Product_Image.objects.all()
 
     def get(self, request, format=None):
-        color_list = Product_Image.objects.all()
-        serializer = ImageSerializer(color_list, many=True)
+        serializer = ImageSerializer(
+            self.get_queryset(),
+            many=True
+        )
         return Response(serializer.data)
+
+
+class UpdateDeleteImageView(RetrieveUpdateDestroyAPIView):
+    """
+    View to delete and update image.
+    """
+
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [
+        custom_permissions.IsSellerUser,
+        custom_permissions.IsSellerOrReadOnly
+    ]
+    queryset = Product_Image.objects.filter()
+    serializer_class = ImageSerializer
+    lookup_field = 'id'
+
+    def get_object(self):
+        obj = get_object_or_404(
+            self.get_queryset(),
+            pk=self.kwargs["id"]
+        )
+        self.check_object_permissions(
+            self.request,
+            obj
+        )
+
+        return obj

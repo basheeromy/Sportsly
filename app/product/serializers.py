@@ -28,7 +28,7 @@ class ProductSerializer(serializers.ModelSerializer):
         product = Product(
             name = validated_data['name'],
             description = validated_data['description'],
-            seller = user,
+            owner = user,
             is_active = validated_data['is_active']
         )
         product.save()
@@ -103,7 +103,7 @@ class CategorySerializer(serializers.ModelSerializer):
             'id',
             'name',
             'parent',
-            'created_by'
+            'owner'
         ]
         extra_kwargs = {'parent': {'required': False}}
 
@@ -115,7 +115,7 @@ class CategorySerializer(serializers.ModelSerializer):
         )
         if 'parent' in validated_data.keys():
             category.parent = validated_data['parent']
-        category.created_by = validated_data['created_by']
+        category.owner = validated_data['created_by']
         category.save()
 
         return category
@@ -128,7 +128,7 @@ class SizeSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'name',
-            'created_by'
+            'owner'
         ]
 
     def create(self, validated_data):
@@ -137,7 +137,7 @@ class SizeSerializer(serializers.ModelSerializer):
         size = Size(
             name = validated_data['name'],
         )
-        size.created_by = validated_data['created_by']
+        size.owner = validated_data['created_by']
         size.save()
 
         return size
@@ -150,7 +150,7 @@ class ColorSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'name',
-            'created_by'
+            'owner'
         ]
 
     def create(self, validated_data):
@@ -159,7 +159,7 @@ class ColorSerializer(serializers.ModelSerializer):
         color = Color(
             name = validated_data['name']
         )
-        color.created_by = validated_data['created_by']
+        color.owner = validated_data['created_by']
         color.save()
 
         return color
@@ -173,7 +173,7 @@ class ImageSerializer(serializers.ModelSerializer):
             'name',
             'image',
             'product',
-            'created_by'
+            'owner'
         ]
 
     def create(self, validated_data):
@@ -184,7 +184,7 @@ class ImageSerializer(serializers.ModelSerializer):
             image = validated_data['image']
         )
         image.product = validated_data['product']
-        image.created_by = validated_data['created_by']
+        image.owner = validated_data['created_by']
         image.save()
 
         return image

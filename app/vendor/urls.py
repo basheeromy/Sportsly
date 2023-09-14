@@ -4,20 +4,26 @@ from django.urls import path
 from vendor.views import (
     CreateVendorView,
     ListCreateProductView,
+    UpdateDeleteProductView,
     ListCreateProductItemView,
-    RetrieveUpdateDeleteProductItemView,
-    UpdateProductView,
+    UpdateDeleteProductItemView,
     ListCreateCategoryView,
-    UpdateCategoryView,
+    UpdateDeleteCategoryView,
     ListCreateSizeView,
-    UpdateSizeView,
+    UpdateDeleteSizeView,
     ListCreateColorView,
-    UpdateColorView,
-    ListCreateImageView
+    UpdateDeleteColorView,
+    ListCreateImageView,
+    UpdateDeleteImageView
 )
 
 urlpatterns = [
-    path('create/', CreateVendorView.as_view(), name='create_vendor'),
+    path(
+        'create/',
+        CreateVendorView.as_view(),
+        name='create_vendor'
+    ),
+
     path(
         'list-create-product',
         ListCreateProductView.as_view(),
@@ -29,12 +35,19 @@ urlpatterns = [
         ListCreateProductItemView.as_view(),
         name='list-create-product-item'
     ),
+
     path(
         'update-delete-product-item/<int:id>',
-        RetrieveUpdateDeleteProductItemView.as_view(),
+        UpdateDeleteProductItemView.as_view(),
         name='update-delete-product-item'
     ),
-    path('update-product', UpdateProductView.as_view(), name='update-product'),
+
+    path(
+        'update-delete-product/<int:id>',
+        UpdateDeleteProductView.as_view(),
+        name='update-product'
+    ),
+
     path(
         'list-create-category',
         ListCreateCategoryView.as_view(),
@@ -42,9 +55,9 @@ urlpatterns = [
     ),
 
     path(
-        'update-category',
-        UpdateCategoryView.as_view(),
-        name='update-category'
+        'update-delete-category/<int:id>',
+        UpdateDeleteCategoryView.as_view(),
+        name='update-delete-category'
     ),
 
     path(
@@ -53,7 +66,11 @@ urlpatterns = [
         name='list-create-size'
     ),
 
-    path('update-size', UpdateSizeView.as_view(), name='update-size'),
+    path(
+        'update-delete-size/<int:id>',
+        UpdateDeleteSizeView.as_view(),
+        name='update-size'
+    ),
 
     path(
         'list-create-color',
@@ -61,11 +78,21 @@ urlpatterns = [
         name='list-create-color'
     ),
 
-    path('update-color', UpdateColorView.as_view(), name='update-color'),
+    path(
+        'update-delete-color/<int:id>',
+        UpdateDeleteColorView.as_view(),
+        name='update-color'
+    ),
 
     path(
         'list-create-image',
         ListCreateImageView.as_view(),
         name='list-images'
-    )
+    ),
+
+    path(
+        'update-delete-image/<int:id>',
+        UpdateDeleteImageView.as_view(),
+        name='update-color'
+    ),
 ]
