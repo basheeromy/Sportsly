@@ -32,44 +32,6 @@ class AddCartItemView(ListCreateAPIView):
         serializer = CartSerializer(product, many=True)
 
         return Response(serializer.data)
-    
-
-"""class UpdateCartView(UpdateAPIView):
-
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
-    serializer_class = CartSerializer
-    queryset = CartItem.objects.filter()
-
-    def get_object(self):
-
-
-        try:
-            id = self.request.data['id']
-            instance = CartItem.objects.get(id=id)
-            return instance
-        except:
-            return False
-
-    def update(self, request, *args, **kwargs):
-
-
-        instance = self.get_object()
-        if instance is False:
-            return Response({'message': 'Id not provided or wrong id',
-                             'status':HTTP_400_BAD_REQUEST
-                            }, 400)
-
-        data = request.data
-        serializer = self.get_serializer(instance, data, partial=True )
-        if serializer.is_valid():
-            self.perform_update(serializer)
-            return Response(
-                {"message": "cart item updated successfully",
-                 "data":serializer.data}
-            )
-        else:
-            return Response({"message": "failed"})"""
 
 
 class UpdateDeleteCartItem(RetrieveUpdateDestroyAPIView):
