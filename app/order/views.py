@@ -1,9 +1,11 @@
 """Views to manage orders"""
 
+from django.shortcuts import get_object_or_404
 import json
 from rest_framework import status
 from rest_framework.generics import (
-    ListCreateAPIView
+    ListCreateAPIView,
+    RetrieveUpdateDestroyAPIView
 )
 from rest_framework.response import Response
 from .models import (
@@ -23,6 +25,7 @@ from user.models import (
 )
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import permissions
+from permissions import custom_permissions
 
 
 class OrderAndOrderItemListCreateAPIView(ListCreateAPIView):
@@ -38,6 +41,13 @@ class OrderAndOrderItemListCreateAPIView(ListCreateAPIView):
         if self.request.method == 'POST':
             return SpecialSerializer
         return OrderSerializer
+
+    def get(self, request, format=None):
+        serializer = self.get_serializer(
+            self.get_queryset().filter(user = request.user),
+            many=True
+        )
+        return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
         "handle order placement."
@@ -71,7 +81,6 @@ class OrderAndOrderItemListCreateAPIView(ListCreateAPIView):
             total_price = 0.00
 
             # Careate order items instances.
-            print(products)
             for product in products:
 
                 product_quantity = quantity[product]
@@ -81,7 +90,7 @@ class OrderAndOrderItemListCreateAPIView(ListCreateAPIView):
                 ).get(id=product_id)
 
 
-                seller = product.name.seller
+                seller = product.name.owner
                 price = product.price * product_quantity
                 if product.quantity < product_quantity:
                     message = (
@@ -145,3 +154,25 @@ class OrderAndOrderItemListCreateAPIView(ListCreateAPIView):
             )
         except Exception as e:
             return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class UpdateOrderView(RetrieveUpdateDestroyAPIView):
+    """
+    Update Orders.
+    """
+
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
+    serializer_class = OrderSerializer
+    queryset = Order.objects.prefetch_related('orderitem_set').filter()
+    lookup_field = 'id'
+
+    def get_object(self):
+        """
+        Over ride the get object method
+        """
+        obj = get_object_or_404(self.get_queryset(), pk=self.kwargs["id"])
+        #self.check_object_permissions(self.request, obj)
+        return obj
