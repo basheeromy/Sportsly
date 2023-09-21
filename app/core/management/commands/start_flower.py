@@ -8,7 +8,10 @@ class Command(BaseCommand):
     help = 'Starts Celery Flower with health check'
 
     def handle(self, *args, **options):
-        """Define the command to run Flower."""
+        """
+        Define the command to run Flower.
+        """
+
         cmd = [
             'celery',
             '-A',
@@ -17,7 +20,10 @@ class Command(BaseCommand):
             '--broker=amqp://rabbitmq_user:rabbitmq_pass@rabbitmq:5672/rabbitmq_vhost',
         ]
 
-        """Define a function to check if Celery workers are available."""
+        """
+        Define a function to check if Celery workers are available.
+        """
+
         def worker_ready():
             result = run(
                 ['celery', '-A', 'app', 'inspect', 'ping'],
@@ -25,7 +31,10 @@ class Command(BaseCommand):
             )
             return result.returncode == 0
 
-        """Wait for Celery workers to become available."""
+        """
+        Wait for Celery workers to become available.
+        """
+
         while not worker_ready():
             self.stdout.write(
                 self.style.SUCCESS('Celery workers not available')
@@ -36,7 +45,10 @@ class Command(BaseCommand):
             self.style.SUCCESS('Celery workers are available')
         )
 
-        """Run Flower with the defined command."""
+        """
+        Run Flower with the defined command.
+        """
+
         result = run(cmd, stdout=PIPE, stderr=PIPE)
         self.stdout.write(
             self.style.SUCCESS(
