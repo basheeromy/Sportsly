@@ -1,0 +1,54 @@
+.header-wrapper {
+    display: flex;
+    background-color: rgba(0, 0, 0, 0);
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    margin-bottom: -30px;
+    padding-top: 10px;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.link-wrapper {
+    display: flex;
+}
+
+.link {
+    text-decoration: none;
+    color: white;
+    padding: 0 10px ;
+}
+
+
+.sportsly {
+    color: rgb(246, 246, 246);
+    font-size: large;
+    margin: 0 10px 0 10px;
+}
+
+.sportsly span {
+    color: rgb(250, 1, 1);
+}
+
+.search-wrapper {
+    background-color: white;
+    padding: 0 5px;
+}
+.search-wrapper input {
+    height: 9px;
+    outline: none;
+    border:none;
+    margin-left: 3px;
+}
+
+.search-wrapper i {
+    font-size: small;
+}
+
+.cart {
+    margin-left: 50px;
+}
+.cart i {
+    color: #ffffff;
+}
