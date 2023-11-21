@@ -1,9 +1,9 @@
 "use client"
 
-import Link from 'next/link'; <Link href={'home'}><button>Press</button></Link>
+import Link from 'next/link';
 import './login.css'
 import { loginAction } from '@/server-actions/auth/login';
-
+import Button from '@/app/(app)/components/Button';
 function LoginPage() {
 
 
@@ -12,6 +12,7 @@ function LoginPage() {
     // const dispatch = useDispatch<AppDispatch>();
     // const data = {email, password}
     //dispatch(authActions.fetchAuth(data));
+    const buttonText = "Login"
 
     const ActionHandler = async (formData:FormData)=> {
 
@@ -42,7 +43,7 @@ function LoginPage() {
                             required
                         />
                     </div>
-                    <div className='form-set'>
+                    <div className='form-set second'>
                         <i className="fa-solid fa-key"></i>
                         <input
                             className='input-container'
@@ -53,11 +54,8 @@ function LoginPage() {
                             required
                         />
                     </div>
-                    <button
-                        type='submit'
-                    >
-                        <span>Login</span>
-                    </button>
+                    <Button text={buttonText}/>
+
                 </form>
             </div>
         </>

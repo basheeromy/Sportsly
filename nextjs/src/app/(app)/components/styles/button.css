@@ -1,0 +1,48 @@
+.buttonWrapper button {
+    border-radius: 4px;
+    background-color: #fffffe;
+    border: none;
+    color: #080606;
+    text-align: center;
+    font-size: medium;
+    padding: 8px;
+    width: 100px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
+    margin-top: 15%;
+}
+
+
+.buttonWrapper button span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+.buttonWrapper button span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+}
+.buttonWrapper button:hover {
+    background-color: rgb(152, 0, 0);
+    transition: 0s;
+    color: #ffffff;
+    border-right: solid;
+    border-bottom: solid;
+    border-color: #504c4c;
+}
+
+.buttonWrapper button:hover span {
+    padding-right: 25px;
+}
+
+.buttonWrapper button:hover span:after {
+    opacity: 1;
+    right: 0;
+}
