@@ -1,35 +1,82 @@
 "use client"
 
-//import Link from 'next/link';<Link href={'home'}><button>Press</button></Link>
-import React, { useEffect, useState } from 'react';
-import axiosInstance from '../../../config/axios';
+import '../styles/authStyle.css'
+import Link from 'next/link';
+import Button from '@/app/(app)/components/Button';
+import { registerAction } from '@/server-actions/auth/register';
 
-function LoginPage() {
-    const [data, setData] = useState([]);
+function RegisterPage() {
 
-    useEffect(() => {
-        axiosInstance.get('/api/list-product-item')
-            .then((response) => {
-                setData(response.data);
+    const buttonText = "Sign Up"
 
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-    }, []);
+    const ActionHandler = async (formData:FormData)=> {
+        const res = await registerAction(formData )
+        console.log(res)
+    }
+
 
     return (
-        <div>
-            {/* Render data from the GET request */}
-            <h1>Hello from Register</h1>
+        <>
 
-            {
-                <div>
-                    {JSON.stringify(data)}
-                </div>
-            }
+            <div className='login-wrapper'>
 
-        </div>
+                <form className='login-box' action={ActionHandler}>
+                    <h1>SignUp</h1>
+                    <div className='form-set'>
+                        <i className="fa-regular fa-at"></i>
+                        <input
+                            className='input-container'
+                            type='email'
+                            name='email'
+                            placeholder='Email ID'
+                            pattern="\S+@\S+\.\S+"
+                            required
+                        />
+                    </div>
+                    <div className='form-set'>
+                        <i className="fa-solid fa-mobile"></i>
+                        <input
+                            className='input-container'
+                            type='tel'
+                            name='mobile'
+                            placeholder='Mobile Number'
+                            pattern="^\+?[0-9]{1,3}-?[0-9]{3}-?[0-9]{3}-?[0-9]{4}$"
+                            maxLength={14}
+                            title="Please enter a valid phone number in the format +123-456-7890 or 123-456-7890"
+                            required
+                        />
+                    </div>
+                    <div className='form-set'>
+                        <i className="fa-regular fa-user"></i>
+                        <input
+                            className='input-container'
+                            type='text'
+                            name='name'
+                            placeholder='Name'
+                            required
+                        />
+                    </div>
+                    <div className='form-set second'>
+                        <i className="fa-solid fa-key"></i>
+                        <input
+                            className='input-container'
+                            type='password'
+                            name='password'
+                            placeholder='Password'
+                            minLength={6}
+                            required
+                        />
+                    </div>
+                    <Button text={buttonText}/>
+
+                </form>
+                <p>Already have an account ? </p>
+                <Link className='link' href='/login'>
+                    <span>Login</span>
+                </Link>
+
+            </div>
+        </>
     )
 }
-export default LoginPage;
+export default RegisterPage;

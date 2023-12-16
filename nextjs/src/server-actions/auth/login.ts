@@ -5,7 +5,7 @@ import {cookies} from 'next/headers'
 
 export const loginAction = async (FormData: FormData): Promise<{ message: string }> => {
 
-    // unpack data recieved from formSubmission
+    // unpack data received from formSubmission
 
     const email = FormData.get('email') as string;
     const password = FormData.get('password') as string;
@@ -25,7 +25,7 @@ export const loginAction = async (FormData: FormData): Promise<{ message: string
         );
 
         // Set cookies.
-        
+
         cookies().set('access', response.data.access, {
             httpOnly: true,
             secure: process.env.NODE_ENV !== 'development',
@@ -33,6 +33,7 @@ export const loginAction = async (FormData: FormData): Promise<{ message: string
             sameSite: 'lax',
             path: '/',
         })
+        console.log("this works")
         return { message: "Successful" }
 
 

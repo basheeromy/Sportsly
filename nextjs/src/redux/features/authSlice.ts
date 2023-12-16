@@ -1,6 +1,6 @@
 import { createAsyncThunk ,createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-// import {login} from "../../server-actions/auth/login";
+import { loginAction } from "@/server-actions/auth/login";
 
 
 type InitialState = {
@@ -21,16 +21,16 @@ const initialState = {
     value: {
         isAuth: false,
         username: "",
+        id:"",
     } as AuthState,
 } as InitialState;
 
 const fetchAuth = createAsyncThunk(
     'auth/fetchAuthCred',
     async (data:any) => {
-        const {email, password} = data
         try {
-            // login(email, password)
             console.log("work till here.")
+            loginAction(data)
 
         } catch (error) {
             console.log(error)
@@ -44,9 +44,11 @@ export const auth = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        logIn: (state, action: MyAction) => {
+        // logIn: (state, action: MyAction) => {
+        //     return {
 
-        },
+        //     };
+        // },
         logOut: () => {
             return initialState;
         },
@@ -58,9 +60,13 @@ export const auth = createSlice({
     }
 })
 
-// export const {logIn, logOut} = auth.actions;
+
 export const authActions = {
     ...auth.actions,
     fetchAuth
 }
 export default auth.reducer;
+
+
+
+// export const {logIn, logOut} = auth.actions;

@@ -16,7 +16,7 @@ const Header = () => {
                 <span>MEN</span>
             </Link>
             <Link className='link' href='/'>
-                <span>WONEN</span>
+                <span>WOMEN</span>
             </Link>
             <Link className='link' href='/'>
                 <span>PACK & GEAR</span>
@@ -33,7 +33,17 @@ const Header = () => {
             <i className="fa-solid fa-cart-shopping" ></i>
             </Link>
 
+            <Link className='cart' href='/login'>
+            <i className="fa-solid fa-user"></i>
+            </Link>
+
         </div>
+        <button className="hamburger">
+            <span className="bar"></span>
+            <span className="bar"></span>
+            <span className="bar"></span>
+        </button>
+
 
 
     </div>

@@ -1,8 +1,38 @@
+:root {
+    --sportsly-red: rgb(212, 0, 0);
+}
 
 body {
-
+    background-image: url(../../../public/sportsmen-inspire.jpg);
+    background-position: center;
+    background-size:cover;
+    background-attachment: fixed;
     background-color: rgb(0, 0, 0);
     margin: 0%;
     color:white;
 
-  }
+}
+
+.Wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* padding: 20px 0 20px 0; */
+    background-color: rgba(0, 0, 0, 0.507);
+}
+
+.sportsly {
+    color: rgb(246, 246, 246);
+    padding-top: 30px;
+    font-size: large;
+    text-decoration: none;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+}
+
+.sportsly span {
+    color: var(--sportsly-red);
+}

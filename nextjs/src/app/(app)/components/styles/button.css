@@ -1,16 +1,13 @@
 .buttonWrapper button {
     border-radius: 4px;
-    background-color: #fffffe;
+    background-color: #5b5858;
     border: none;
-    color: #080606;
+    color: #ffffff;
     text-align: center;
-    font-size: medium;
-    padding: 8px;
+    font-size: small;
+    padding: 8px 0 ;
     width: 100px;
-    transition: all 0.5s;
     cursor: pointer;
-    margin: 5px;
-    margin-top: 15%;
 }
 
 
@@ -18,7 +15,7 @@
     cursor: pointer;
     display: inline-block;
     position: relative;
-    transition: 0.5s;
+    transition: 0.9s;
 }
 
 .buttonWrapper button span:after {
@@ -27,15 +24,13 @@
     opacity: 0;
     top: 0;
     right: -20px;
-    transition: 0.5s;
+    transition: 0.9s;
 }
 .buttonWrapper button:hover {
-    background-color: rgb(152, 0, 0);
     transition: 0s;
     color: #ffffff;
-    border-right: solid;
-    border-bottom: solid;
-    border-color: #504c4c;
+    background-color: rgb(152, 0, 0);
+    transition: 0.9s;
 }
 
 .buttonWrapper button:hover span {
@@ -45,4 +40,7 @@
 .buttonWrapper button:hover span:after {
     opacity: 1;
     right: 0;
+}
+.buttonWrapper button:active {
+    background-color: rgb(253, 0, 0);
 }

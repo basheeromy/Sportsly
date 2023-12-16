@@ -8,16 +8,30 @@
     padding-top: 10px;
     align-items: center;
     justify-content: space-around;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.729);
+    backdrop-filter: blur(5px);
+    padding: 5px 0 ;
 }
 
 .link-wrapper {
     display: flex;
+    align-items: center;
 }
-
+.link-wrapper span:hover {
+    color: var(--sportsly-hvred);
+    transition: .1s;
+}
+.link-wrapper span:active {
+    color: var(--sportsly-red);
+}
 .link {
     text-decoration: none;
-    color: white;
-    padding: 0 10px ;
+    color: rgb(255, 255, 255);
+    padding: 0 10px;
+    font-family:  sans-serif;
+    font-size: .7rem;
+    font-weight:100;
 }
 
 
@@ -28,18 +42,22 @@
 }
 
 .sportsly span {
-    color: rgb(250, 1, 1);
+    color: var(--sportsly-red);
 }
 
 .search-wrapper {
-    background-color: white;
-    padding: 0 5px;
+    background-color: rgba(255, 255, 255, 0.185);
+    padding: 3px 5px;
+    border-radius: 2px;
+    height: 20px;
+    margin-left: 20px;
 }
 .search-wrapper input {
-    height: 9px;
+    background-color: rgba(225, 166, 166, 0);
+    color: white;
     outline: none;
     border:none;
-    margin-left: 3px;
+    margin-left: 5px;
 }
 
 .search-wrapper i {
@@ -48,7 +66,59 @@
 
 .cart {
     margin-left: 50px;
+
 }
 .cart i {
-    color: #ffffff;
+    color: white;
+    padding: 7px 6px;
+    border-radius: 30%;
+}
+.cart i:hover {
+    color: var(--sportsly-hvred);
+    transition: 0.3s;
+}
+.cart i:active {
+    color: var(--sportsly-red);
+    transform: scale(.8);
+    background-color: rgba(255, 255, 255, 0.151);
+}
+.hamburger {
+    display: none;
+}
+
+@media screen and (max-width:790px)
+{
+    .link {
+        display: none;
+    }
+    .hamburger {
+        display: block;
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+        border-radius: 30%;
+        background-color: rgba(0, 0, 0, 0);
+        border-style:none;
+    }
+    .hamburger:active {
+        transform: scale(.8);
+        background-color: rgba(255, 255, 255, 0.151);
+    }
+    .hamburger span {
+        display: block;
+        width: 80%;
+        height: 1.5px;
+        background-color: white;
+        margin: 5px auto;
+    }
+    .hamburger:hover > * {
+        background-color: var(--sportsly-hvred);
+        transition: 0.3s;
+    }
+    .hamburger:active > * {
+        background-color: var(--sportsly-red);
+    }
+
+
+
 }
