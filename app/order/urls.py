@@ -9,6 +9,6 @@ from order.views import (
 
 
 urlpatterns = [
-    path('add_item', OrderAndOrderItemListCreateAPIView.as_view(), name="list-place-order"),
-    path('update-order/<int:id>', UpdateOrderView.as_view(), name='update-order')
+    path('', OrderAndOrderItemListCreateAPIView.as_view(), name="list-place-order"),
+    path('<int:id>', UpdateOrderView.as_view(), name='update-order')
 ]

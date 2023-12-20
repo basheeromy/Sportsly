@@ -159,7 +159,7 @@ class ColorSerializer(serializers.ModelSerializer):
         color = Color(
             name = validated_data['name']
         )
-        color.owner = validated_data['created_by']
+        color.owner = validated_data['created_by'] # change to owner
         color.save()
 
         return color
@@ -184,7 +184,7 @@ class ImageSerializer(serializers.ModelSerializer):
             image = validated_data['image']
         )
         image.product = validated_data['product']
-        image.owner = validated_data['created_by']
+        image.owner = validated_data['owner'] # change to owner.
         image.save()
 
         return image

@@ -82,4 +82,3 @@ class User(AbstractBaseUser, PermissionsMixin):
 def created_user(sender, created, instance, **kwargs):
     if created:
         print(f"new user {instance.name} created successfully. sender is {sender}")
-        

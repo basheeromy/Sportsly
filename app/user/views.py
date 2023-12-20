@@ -39,7 +39,7 @@ import math
 import random
 
 
-class CreatUserView(CreateAPIView):
+class CreateUserView(CreateAPIView):
     """Create a new Customer user."""
     serializer_class = UserSerializer
 

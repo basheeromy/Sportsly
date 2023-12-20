@@ -29,7 +29,9 @@ from permissions import custom_permissions
 
 
 class OrderAndOrderItemListCreateAPIView(ListCreateAPIView):
-    """View to create and list orders and order items at once."""
+    """
+    View to create and list orders and order items at once.
+    """
 
     authentication_classes = [JWTAuthentication]
     permission_classes = [permissions.IsAuthenticated]

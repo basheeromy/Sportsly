@@ -82,8 +82,11 @@ class UpdateDeleteProductView(RetrieveUpdateDestroyAPIView):
 
 
 class ListCreateProductItemView(ListCreateAPIView):
-    """
-    List and create product.
+
+    """List and create product .
+
+    Returns:
+        _type_: _description_
     """
 
     authentication_classes = [JWTAuthentication]

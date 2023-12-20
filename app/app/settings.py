@@ -35,8 +35,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
-    '192.168.1.5',
-    'localhost'
+    '192.168.1.6',
+    'localhost',
+    'app'
 ]
 
 
@@ -206,6 +207,8 @@ SIMPLE_JWT = {
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8080',
+    'http://127.0.0.1:3000',
+    'http://localhost:3000',
 ]
 
 OTP_API_KEY = env('OTP_API_KEY')

@@ -19,79 +19,79 @@ from vendor.views import (
 
 urlpatterns = [
     path(
-        'create/',
+        '',
         CreateVendorView.as_view(),
         name='create_vendor'
     ),
 
     path(
-        'list-create-product',
+        'product',
         ListCreateProductView.as_view(),
         name='list-create-product'
     ),
 
     path(
-        'list-create-product-item',
+        'product-item',
         ListCreateProductItemView.as_view(),
         name='list-create-product-item'
     ),
 
     path(
-        'update-delete-product-item/<int:id>',
+        'product-item/<int:id>',
         UpdateDeleteProductItemView.as_view(),
         name='update-delete-product-item'
     ),
 
     path(
-        'update-delete-product/<int:id>',
+        'product/<int:id>',
         UpdateDeleteProductView.as_view(),
         name='update-product'
     ),
 
     path(
-        'list-create-category',
+        'category',
         ListCreateCategoryView.as_view(),
         name='list-create-category'
     ),
 
     path(
-        'update-delete-category/<int:id>',
+        'category/<int:id>',
         UpdateDeleteCategoryView.as_view(),
         name='update-delete-category'
     ),
 
     path(
-        'list-create-size',
+        'size',
         ListCreateSizeView.as_view(),
         name='list-create-size'
     ),
 
     path(
-        'update-delete-size/<int:id>',
+        'size/<int:id>',
         UpdateDeleteSizeView.as_view(),
         name='update-size'
     ),
 
     path(
-        'list-create-color',
+        'color',
         ListCreateColorView.as_view(),
         name='list-create-color'
     ),
 
     path(
-        'update-delete-color/<int:id>',
+        'color/<int:id>',
         UpdateDeleteColorView.as_view(),
         name='update-color'
     ),
 
     path(
-        'list-create-image',
+        'image',
         ListCreateImageView.as_view(),
         name='list-images'
     ),
 
     path(
-        'update-delete-image/<int:id>',
+        'image/<int:id>',
         UpdateDeleteImageView.as_view(),
         name='update-color'
     ),

@@ -10,6 +10,6 @@ from cart.views import (
 path('update_item', UpdateCartView.as_view(), name="add_to_cart"),"""
 
 urlpatterns = [
-    path('add_item', AddCartItemView.as_view(), name="add_to_cart"),
-    path('update_item/<int:id>', UpdateDeleteCartItem.as_view(), name="delete_cart_item")
+    path('', AddCartItemView.as_view(), name="add_to_cart"),
+    path('<int:id>', UpdateDeleteCartItem.as_view(), name="delete_cart_item")
 ]
