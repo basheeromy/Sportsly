@@ -12,6 +12,7 @@ export const registerAction = async (FormData: FormData): Promise<{ message: str
     const password = FormData.get('password') as string;
 
     try {
+        console.log("this works.")
         const response = await axios.post(
             'http://app:8000/api/user/',
             {

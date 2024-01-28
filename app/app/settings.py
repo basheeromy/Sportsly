@@ -35,7 +35,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
-    '192.168.1.6',
+    '192.168.1.12',
     'localhost',
     'app'
 ]
@@ -166,14 +166,14 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=7),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=15),
+    "ACCESS_TOKEN_LIFETIME": timedelta(seconds=10),
+    "REFRESH_TOKEN_LIFETIME": timedelta(seconds=25),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
     "UPDATE_LAST_LOGIN": False,
 
     "ALGORITHM": "HS256",
-    #"SIGNING_KEY": settings.SECRET_KEY,
+    # "SIGNING_KEY": settings.SECRET_KEY,
     "VERIFYING_KEY": "",
     "AUDIENCE": None,
     "ISSUER": None,
@@ -208,7 +208,7 @@ SIMPLE_JWT = {
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8080',
     'http://127.0.0.1:3000',
-    'http://localhost:3000',
+    'http://localhost:3000'
 ]
 
 OTP_API_KEY = env('OTP_API_KEY')
@@ -225,7 +225,7 @@ CACHES = {
 }
 
 CELERY_BROKER_URL = 'amqp://rabbitmq_user:rabbitmq_pass@rabbitmq:5672/rabbitmq_vhost'
-#CELERY_RESULT_BACKEND = 'default'
-#CELERY_CACHE_BACKEND = 'default'
+# CELERY_RESULT_BACKEND = 'default'
+# CELERY_CACHE_BACKEND = 'default'
 
 CELERY_IMPORTS = ("user.task",)

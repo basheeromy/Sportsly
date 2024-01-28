@@ -12,11 +12,6 @@ type AuthState = {
     username: string;
 }
 
-interface MyAction extends PayloadAction<{
-    email: string;
-    password: string;
-}> {}
-
 const initialState = {
     value: {
         isAuth: false,
@@ -44,11 +39,6 @@ export const auth = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        // logIn: (state, action: MyAction) => {
-        //     return {
-
-        //     };
-        // },
         logOut: () => {
             return initialState;
         },
@@ -66,7 +56,3 @@ export const authActions = {
     fetchAuth
 }
 export default auth.reducer;
-
-
-
-// export const {logIn, logOut} = auth.actions;

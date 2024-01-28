@@ -24,6 +24,9 @@ services:
     depends_on:
       - db
       - redis
+    networks:
+      - default
+      - network
 
   db:
     restart: always
@@ -108,21 +111,27 @@ services:
       - rabbitmq
       - db
 
-  nextjs:
-    restart: always
-    image: next-js-frontend
-    build:
-      context: .
-      dockerfile: Dockerfile.frontend
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./nextjs:/app
-    command: >
-      sh -c "yarn dev"
-    depends_on:
-      - app
+  # nextjs:
+  #   restart: always
+  #   image: next-js-frontend
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.frontend
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - ./nextjs:/app
+  #   command: >
+  #     sh -c "yarn dev"
+  #   depends_on:
+  #     - app
 
 volumes:
   dev-db-data:
   dev-static-data:
+
+networks:
+  network:
+    driver: bridge
+    name: sportsly-internal-network
+    

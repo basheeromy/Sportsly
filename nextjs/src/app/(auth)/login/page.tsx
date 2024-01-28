@@ -11,12 +11,6 @@ import { experimental_useFormState } from 'react-dom';
 import { authActions } from '@/redux/features/authSlice';
 function LoginPage() {
 
-
-    // const [state, authAction] = experimental_useFormState(loginAction, initialState)
-
-    // const dispatch = useDispatch<AppDispatch>();
-    // const data = {email, password}
-    // dispatch(authActions.fetchAuth(data));
     const buttonText = "Login"
     const dispatch = useDispatch<AppDispatch>();
 
@@ -24,12 +18,7 @@ function LoginPage() {
 
         // const [state, authAction] = experimental_useFormState(loginAction, initialState)
 
-
-        // const data = {formData.email, formData.password}
         dispatch(authActions.fetchAuth(formData));
-
-        // const res = await loginAction(formData )
-        // console.log(res)
     }
 
     return (

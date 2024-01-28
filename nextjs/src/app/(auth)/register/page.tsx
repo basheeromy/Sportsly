@@ -9,10 +9,10 @@ function RegisterPage() {
 
     const buttonText = "Sign Up"
 
-    const ActionHandler = async (formData:FormData)=> {
-        const res = await registerAction(formData )
-        console.log(res)
-    }
+    // const ActionHandler = async (formData:FormData)=> {
+    //     const res = await registerAction(formData )
+    //     console.log(res)
+    // }
 
 
     return (
@@ -20,7 +20,7 @@ function RegisterPage() {
 
             <div className='login-wrapper'>
 
-                <form className='login-box' action={ActionHandler}>
+                <form className='login-box' action={registerAction}>
                     <h1>SignUp</h1>
                     <div className='form-set'>
                         <i className="fa-regular fa-at"></i>
@@ -40,7 +40,7 @@ function RegisterPage() {
                             type='tel'
                             name='mobile'
                             placeholder='Mobile Number'
-                            pattern="^\+?[0-9]{1,3}-?[0-9]{3}-?[0-9]{3}-?[0-9]{4}$"
+                            pattern="^\+?[0-9]{1,3}?[0-9]{3}?[0-9]{3}?[0-9]{4}$"
                             maxLength={14}
                             title="Please enter a valid phone number in the format +123-456-7890 or 123-456-7890"
                             required

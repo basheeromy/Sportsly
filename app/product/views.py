@@ -1,13 +1,16 @@
 
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
+from rest_framework import permissions
 from .models import (
     Product,
-    Product_item
+    Product_item,
+    Banner
 )
 from .serializers import (
     ProductSerializer,
-    ProductItemSerializer
+    ProductItemSerializer,
+    BannerSerializer
 )
 from drf_spectacular.utils import extend_schema
 
@@ -27,5 +30,11 @@ class ProductItemListView(ListAPIView):
     def get(self, request, format=None):
         products = Product_item.objects.all()
         serializer = ProductItemSerializer(products, many=True)
+        permission_classes = permissions.IsAuthenticatedOrReadOnly
 
         return Response(serializer.data)
+
+class ListBanners(ListAPIView):
+    serializer_class = BannerSerializer
+    queryset = Banner.objects.all()
+

@@ -115,3 +115,42 @@ class Product_Image(models.Model):
     owner = models.ForeignKey(User, related_name="Uploaded_seller", on_delete=models.CASCADE)
     def __str__(self):
         return f'{self.name} image'
+
+
+class Displays(models.TextChoices):
+    """
+    Banner position choices.
+    """
+    Home = 'Home'
+    Category = 'Category'
+    Profile = 'Profile'
+
+
+def banner_image_file_path(instance, filename):
+    """Generate file path for new product image."""
+    ext = os.path.splitext(filename)[1]
+    filename = f'{uuid.uuid4()}{ext}'
+
+    return os.path.join('uploads', 'banner', filename)
+class Banner(models.Model):
+    info = models.TextField(
+        null=True,
+        blank=True
+    )
+    display_space = models.CharField(
+        max_length=20,
+        choices=Displays.choices,
+        default=Displays.Profile
+    )
+    banner_image = models.ImageField(
+        upload_to=banner_image_file_path
+    )
+
+    url = models.URLField()
+
+    vendor = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        limit_choices_to={"is_seller": True}
+    )
+    validity = models.DateTimeField(null=True, blank=True)

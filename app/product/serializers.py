@@ -6,7 +6,8 @@ from .models import (
     Category,
     Size,
     Color,
-    Product_Image
+    Product_Image,
+    Banner
 )
 
 
@@ -188,3 +189,9 @@ class ImageSerializer(serializers.ModelSerializer):
         image.save()
 
         return image
+
+
+class BannerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Banner
+        fields ='__all__'

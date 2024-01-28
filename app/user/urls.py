@@ -25,7 +25,7 @@ app_name = 'user'
 
 urlpatterns = [
     path('', CreateUserView.as_view(), name='create'),
-    path('manage/', ManageUserView.as_view(), name="update"),
+    path('profile/', ManageUserView.as_view(), name="update"),
     path('token/', GenerateTokenView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('generate-otp/', GenerateOtpView.as_view(), name='generate_otp'),
