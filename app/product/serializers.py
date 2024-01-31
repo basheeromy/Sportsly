@@ -194,4 +194,7 @@ class ImageSerializer(serializers.ModelSerializer):
 class BannerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Banner
-        fields ='__all__'
+        fields =[
+            'banner_image',
+            'path'
+        ]

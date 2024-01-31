@@ -7,15 +7,24 @@ from PIL import Image # noqa
 from core.models import User
 from django.utils import timezone
 from django.utils.text import slugify
+from mptt.models import MPTTModel, TreeForeignKey
 
 
 
-class Category(models.Model):
+class Category(MPTTModel):
     """Manage product catergories with hierarchy."""
 
     name = models.CharField(max_length=100, unique=True)
-    parent = models.ForeignKey('self', on_delete=models.PROTECT, null=True, blank=True)
+    parent = TreeForeignKey(
+        'self',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name='children'
+    )
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    class MPTTMeta:
+        order_insertion_by = ['name']
 
     def __str__(self):
         return self.name
@@ -146,7 +155,9 @@ class Banner(models.Model):
         upload_to=banner_image_file_path
     )
 
-    url = models.URLField()
+    # url = models.URLField()
+    path = models.CharField(max_length=255)
+
 
     vendor = models.ForeignKey(
         User,

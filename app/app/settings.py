@@ -62,7 +62,8 @@ INSTALLED_APPS = [
     'cart',
     'order',
     'django_celery_results',
-    'django_celery_beat'
+    'django_celery_beat',
+    'mptt'
 ]
 
 MIDDLEWARE = [
