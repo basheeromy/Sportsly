@@ -10,9 +10,15 @@ from django.utils.text import slugify
 from mptt.models import MPTTModel, TreeForeignKey
 
 
+def category_image_file_path(instance, filename):
+    """Generate file path for new category image."""
+    ext = os.path.splitext(filename)[1]
+    filename = f'{uuid.uuid4()}{ext}'
+
+    return os.path.join('uploads', 'category', filename)
 
 class Category(MPTTModel):
-    """Manage product catergories with hierarchy."""
+    """Manage product categories with hierarchy."""
 
     name = models.CharField(max_length=100, unique=True)
     parent = TreeForeignKey(
@@ -22,7 +28,16 @@ class Category(MPTTModel):
         blank=True,
         related_name='children'
     )
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    info = models.TextField(
+        null=True,
+        blank=True
+    )
+    path = models.CharField(max_length=255)
+    image = models.ImageField(
+        upload_to=category_image_file_path
+    )
+
+
     class MPTTMeta:
         order_insertion_by = ['name']
 
@@ -136,11 +151,12 @@ class Displays(models.TextChoices):
 
 
 def banner_image_file_path(instance, filename):
-    """Generate file path for new product image."""
+    """Generate file path for new banner image."""
     ext = os.path.splitext(filename)[1]
     filename = f'{uuid.uuid4()}{ext}'
 
     return os.path.join('uploads', 'banner', filename)
+
 class Banner(models.Model):
     info = models.TextField(
         null=True,
@@ -155,7 +171,6 @@ class Banner(models.Model):
         upload_to=banner_image_file_path
     )
 
-    # url = models.URLField()
     path = models.CharField(max_length=255)
 
 

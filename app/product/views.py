@@ -1,16 +1,20 @@
 
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import (
+    ListAPIView
+)
 from rest_framework.response import Response
 from rest_framework import permissions
 from .models import (
     Product,
     Product_item,
-    Banner
+    Banner,
+    Category
 )
 from .serializers import (
     ProductSerializer,
     ProductItemSerializer,
-    BannerSerializer
+    BannerSerializer,
+    CategorySerializer
 )
 from drf_spectacular.utils import extend_schema
 
@@ -38,3 +42,6 @@ class ListBanners(ListAPIView):
     serializer_class = BannerSerializer
     queryset = Banner.objects.all()
 
+class TopLevelCategoriesAPIView(ListAPIView):
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()

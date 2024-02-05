@@ -103,8 +103,8 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'name',
+            'image',
             'parent',
-            'owner'
         ]
         extra_kwargs = {'parent': {'required': False}}
 
