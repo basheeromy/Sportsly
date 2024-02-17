@@ -104,6 +104,7 @@ class CategorySerializer(serializers.ModelSerializer):
             'id',
             'name',
             'image',
+            'path',
             'parent',
         ]
         extra_kwargs = {'parent': {'required': False}}
@@ -120,6 +121,27 @@ class CategorySerializer(serializers.ModelSerializer):
         category.save()
 
         return category
+
+class CategoryTreeSerializer(serializers.ModelSerializer):
+    """
+        Serializer to handle category tree.
+    """
+    children = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Category
+        fields = [
+            'id',
+            'name',
+            'image',
+            'path',
+            'children'
+        ]
+    def get_children(self, obj):
+
+        children = obj.children.all()
+        serializer = self.__class__(children, many=True)
+        return serializer.data
 
 
 class SizeSerializer(serializers.ModelSerializer):
