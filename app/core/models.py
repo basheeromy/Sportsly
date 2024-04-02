@@ -62,8 +62,18 @@ class User(AbstractBaseUser, PermissionsMixin):
     customer, seller/vendor, admin.
     """
 
+    GENDER_CHOICES = (
+        ('M', 'Men'),
+        ('W', 'Women')
+    )
+
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
+    gender = models.CharField(
+        max_length=10,
+        choices=GENDER_CHOICES,
+        null=True
+    )
     mobile = models.CharField(max_length=15, unique=True)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
