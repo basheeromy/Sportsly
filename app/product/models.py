@@ -2,7 +2,10 @@
 import uuid
 import os
 from django.db import models
-from django.core.validators import MinValueValidator
+from django.core.validators import (
+    MinValueValidator,
+    MaxValueValidator
+)
 from PIL import Image # noqa
 from core.models import User
 from django.utils import timezone
@@ -83,7 +86,7 @@ class Product_item(models.Model):
     """Model to manage variants of a particular product"""
     name = models.ForeignKey(
         Product, on_delete=models.CASCADE,
-        related_name="productitem_set"
+        related_name="product"
     )
     SKU = models.CharField(max_length=100, unique=True)
     size = models.ForeignKey(Size, on_delete=models.CASCADE)
@@ -96,12 +99,19 @@ class Product_item(models.Model):
 
     discount = models.IntegerField(
         default=0,
-        validators=[MinValueValidator(0)]
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(99)
+        ]
     )
     created_on = models.DateTimeField(editable=False)
     updated_on = models.DateTimeField(editable=False)
     is_active = models.BooleanField(default=True)
-    coupen = models.CharField(max_length=200, null=True, blank=True)
+    coupon = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True
+    )
 
     class Meta:
         ordering = ('-updated_on',)
@@ -133,7 +143,7 @@ class Product_Image(models.Model):
     image = models.ImageField(upload_to=product_image_file_path)
     product = models.ForeignKey(
         Product_item,
-        related_name="Product_image",
+        related_name="images",
         on_delete=models.CASCADE
     )
     owner = models.ForeignKey(User, related_name="Uploaded_seller", on_delete=models.CASCADE)

@@ -11,7 +11,6 @@ from .models import (
 )
 
 
-
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
@@ -27,10 +26,10 @@ class ProductSerializer(serializers.ModelSerializer):
         """Create and return a new product"""
         user = (self.context['request']).user
         product = Product(
-            name = validated_data['name'],
-            description = validated_data['description'],
-            owner = user,
-            is_active = validated_data['is_active']
+            name=validated_data['name'],
+            description=validated_data['description'],
+            owner=user,
+            is_active=validated_data['is_active']
         )
         product.save()
         product.category.set(validated_data['category'])
@@ -43,13 +42,41 @@ class ProductItemListSerializer(serializers.ModelSerializer):
     size = serializers.StringRelatedField()
     color = serializers.StringRelatedField()
 
-
     class Meta:
         model = Product_item
         fields = '__all__'
 
 
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product_Image
+        fields = [
+            'id',
+            'name',
+            'image',
+            'product',
+            'owner'
+        ]
+
+    def create(self, validated_data):
+        """Create and return new color."""
+
+        image = Product_Image(
+            name=validated_data['name'],
+            image=validated_data['image']
+        )
+        image.product = validated_data['product']
+        image.owner = validated_data['owner']  # change to owner.
+        image.save()
+
+        return image
+
+
 class ProductItemSerializer(serializers.ModelSerializer):
+    images = ImageSerializer(
+        many=True,
+        read_only=True
+    )
 
     class Meta:
         model = Product_item
@@ -65,7 +92,8 @@ class ProductItemSerializer(serializers.ModelSerializer):
             'created_on',
             'updated_on',
             'is_active',
-            'coupen'
+            'coupon',
+            'images'
         ]
         extra_kwargs = {
             'created_on': {
@@ -81,15 +109,15 @@ class ProductItemSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         """Create and return a new product_item."""
         product_item = Product_item(
-            name = validated_data['name'],
-            SKU = validated_data['SKU'],
-            size = validated_data['size'],
-            color = validated_data['color'],
-            price = validated_data['price'],
-            quantity = validated_data['quantity'],
-            discount = validated_data['discount'],
-            is_active = validated_data['is_active'],
-            coupen = validated_data['coupen']
+            name=validated_data['name'],
+            SKU=validated_data['SKU'],
+            size=validated_data['size'],
+            color=validated_data['color'],
+            price=validated_data['price'],
+            quantity=validated_data['quantity'],
+            discount=validated_data['discount'],
+            is_active=validated_data['is_active'],
+            coupon=validated_data['coupon']
         )
         product_item.save()
         return product_item
@@ -113,7 +141,7 @@ class CategorySerializer(serializers.ModelSerializer):
         """Create and return new category"""
 
         category = Category(
-            name = validated_data['name'],
+            name=validated_data['name'],
         )
         if 'parent' in validated_data.keys():
             category.parent = validated_data['parent']
@@ -121,6 +149,7 @@ class CategorySerializer(serializers.ModelSerializer):
         category.save()
 
         return category
+
 
 class CategoryTreeSerializer(serializers.ModelSerializer):
     """
@@ -137,6 +166,7 @@ class CategoryTreeSerializer(serializers.ModelSerializer):
             'path',
             'children'
         ]
+
     def get_children(self, obj):
 
         children = obj.children.all()
@@ -158,12 +188,13 @@ class SizeSerializer(serializers.ModelSerializer):
         """Create and return new size."""
 
         size = Size(
-            name = validated_data['name'],
+            name=validated_data['name'],
         )
         size.owner = validated_data['created_by']
         size.save()
 
         return size
+
 
 class ColorSerializer(serializers.ModelSerializer):
     """Serializer to manage product color."""
@@ -180,43 +211,18 @@ class ColorSerializer(serializers.ModelSerializer):
         """Create and return new color."""
 
         color = Color(
-            name = validated_data['name']
+            name=validated_data['name']
         )
-        color.owner = validated_data['created_by'] # change to owner
+        color.owner = validated_data['created_by']  # change to owner
         color.save()
 
         return color
 
 
-class ImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product_Image
-        fields = [
-            'id',
-            'name',
-            'image',
-            'product',
-            'owner'
-        ]
-
-    def create(self, validated_data):
-        """Create and return new color."""
-
-        image = Product_Image(
-            name = validated_data['name'],
-            image = validated_data['image']
-        )
-        image.product = validated_data['product']
-        image.owner = validated_data['owner'] # change to owner.
-        image.save()
-
-        return image
-
-
 class BannerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Banner
-        fields =[
+        fields = [
             'banner_image',
             'path'
         ]

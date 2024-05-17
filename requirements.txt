@@ -19,3 +19,4 @@ google-auth-httplib2==0.1.1
 google-auth-oauthlib==1.1.0
 google-auth==2.23.0
 django-mptt==0.16.0
+django-filter==24.2

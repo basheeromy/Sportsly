@@ -19,7 +19,10 @@ from .serializers import (
     CategorySerializer,
     CategoryTreeSerializer
 )
+
+from .filters import ProductItemFilter
 from drf_spectacular.utils import extend_schema
+from django_filters import rest_framework as filters
 
 class ProductListView(ListAPIView):
 
@@ -33,13 +36,29 @@ class ProductListView(ListAPIView):
 
 class ProductItemListView(ListAPIView):
 
-    @extend_schema(request=ProductItemSerializer, responses=None)
-    def get(self, request, format=None):
-        products = Product_item.objects.all()
-        serializer = ProductItemSerializer(products, many=True)
-        permission_classes = permissions.IsAuthenticatedOrReadOnly
+    queryset = Product_item.objects.all()
+    serializer_class = ProductItemSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = ProductItemFilter
+    # permission_classes = permissions.IsAuthenticatedOrReadOnly
 
-        return Response(serializer.data)
+
+
+    # @extend_schema(request=ProductItemSerializer, responses=None)
+    # def get(self, request, format=None):
+    #     product_items = Product_item.objects.all()
+    #     serializer = ProductItemSerializer(product_items, many=True)
+    #     # permission_classes = permissions.IsAuthenticatedOrReadOnly
+
+        # return Response(serializer.data)
+
+# class ProductTileListView(ListAPIView):
+
+#     # @extend_schema(request=ProductItemSerializer, responses=None)
+#     def get(self, request, format=None):
+#         products = Product.objects.all()
+#         pass
+
 
 class ListBanners(ListAPIView):
     serializer_class = BannerSerializer
