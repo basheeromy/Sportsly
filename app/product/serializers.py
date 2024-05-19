@@ -37,24 +37,14 @@ class ProductSerializer(serializers.ModelSerializer):
         return product
 
 
-class ProductItemListSerializer(serializers.ModelSerializer):
-    name = serializers.StringRelatedField()
-    size = serializers.StringRelatedField()
-    color = serializers.StringRelatedField()
-
-    class Meta:
-        model = Product_item
-        fields = '__all__'
-
-
 class ImageSerializer(serializers.ModelSerializer):
+    owner = serializers.StringRelatedField()
     class Meta:
         model = Product_Image
         fields = [
             'id',
             'name',
             'image',
-            'product',
             'owner'
         ]
 
@@ -77,6 +67,9 @@ class ProductItemSerializer(serializers.ModelSerializer):
         many=True,
         read_only=True
     )
+    name = serializers.StringRelatedField()
+    size = serializers.StringRelatedField()
+    color = serializers.StringRelatedField()
 
     class Meta:
         model = Product_item
@@ -121,6 +114,26 @@ class ProductItemSerializer(serializers.ModelSerializer):
         )
         product_item.save()
         return product_item
+
+
+class ProductItemListSerializer(serializers.ModelSerializer):
+    """
+        This serializer helps us to serialize the
+        combined data from product and productItem
+        table for product_tiles purpose.
+    """
+    first_item = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Product
+        fields = ['id', 'first_item']
+
+    def get_first_item(self, obj):
+        try:
+            product_item = Product_item.objects.get(pk=obj.first_item_id)
+            return ProductItemSerializer(product_item).data
+        except Product_item.DoesNotExist:
+            return None
 
 
 class CategorySerializer(serializers.ModelSerializer):

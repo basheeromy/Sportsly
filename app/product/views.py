@@ -17,12 +17,15 @@ from .serializers import (
     ProductItemSerializer,
     BannerSerializer,
     CategorySerializer,
+    ProductItemListSerializer,
     CategoryTreeSerializer
 )
 
 from .filters import ProductItemFilter
 from drf_spectacular.utils import extend_schema
 from django_filters import rest_framework as filters
+
+from django.db.models import OuterRef, Subquery
 
 class ProductListView(ListAPIView):
 
@@ -40,24 +43,27 @@ class ProductItemListView(ListAPIView):
     serializer_class = ProductItemSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = ProductItemFilter
-    # permission_classes = permissions.IsAuthenticatedOrReadOnly
+    
 
+class ProductTileListView(ListAPIView):
 
+    serializer_class = ProductItemListSerializer
 
-    # @extend_schema(request=ProductItemSerializer, responses=None)
-    # def get(self, request, format=None):
-    #     product_items = Product_item.objects.all()
-    #     serializer = ProductItemSerializer(product_items, many=True)
-    #     # permission_classes = permissions.IsAuthenticatedOrReadOnly
+    def get_queryset(self):
 
-        # return Response(serializer.data)
+        # Subquery to fetch the first product item for each product
+        first_item_subquery = Product_item.objects.filter(
+            name=OuterRef('pk')
+        ).order_by('updated_on').values('pk')[:1]
 
-# class ProductTileListView(ListAPIView):
+        # Annotate each product with the first product item
+        queryset = Product.objects.annotate(
+            first_item_id=Subquery(first_item_subquery)
+        )
+        # .select_related('owner')
 
-#     # @extend_schema(request=ProductItemSerializer, responses=None)
-#     def get(self, request, format=None):
-#         products = Product.objects.all()
-#         pass
+        return queryset
+
 
 
 class ListBanners(ListAPIView):
