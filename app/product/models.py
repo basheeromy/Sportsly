@@ -66,9 +66,54 @@ class Size(models.Model):
         return self.name
 
 
+# class ProductQuerySet(models.QuerySet):
+
+#     def with_first_item(self):
+
+#         first_item_subquery = Product_item.objects.filter(
+#             name=models.OuterRef('pk')
+#         ).order_by('updated_on').values('pk')[:1]
+
+#         return self.annotate(
+#             first_item_id=models.Subquery(
+#                 first_item_subquery
+#             )
+#         )
+
+
+# class ProductManager(models.Manager):
+#     def get_queryset(self):
+#         return ProductQuerySet(
+#             self.model,
+#             using=self._db
+#         ).with_first_item()
+
+
+class Brand(models.Model):
+    """Manage Brands."""
+
+    name = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    owner = models.ForeignKey(
+        User,
+        related_name='owner_of_brand',
+        on_delete=models.CASCADE
+    )
+
+    def __str__(self):
+        return(self.name)
+
+
 class Product(models.Model):
     """Manage Products."""
     name = models.CharField(max_length=200)
+    brand = models.ForeignKey(
+        Brand,
+        related_name='brand_of_the_product',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
     description = models.TextField(blank=True)
     category = models.ManyToManyField(Category, blank=True)
     owner = models.ForeignKey(
@@ -77,6 +122,8 @@ class Product(models.Model):
         on_delete=models.CASCADE
     )
     is_active = models.BooleanField(default=True)
+
+    # objects = ProductManager()
 
     def __str__(self):
         return self.name

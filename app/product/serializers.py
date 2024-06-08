@@ -120,7 +120,7 @@ class ProductItemListSerializer(serializers.ModelSerializer):
     """
         This serializer helps us to serialize the
         combined data from product and productItem
-        table for product_tiles purpose.
+        table for product_tiles.
     """
     first_item = serializers.SerializerMethodField()
 

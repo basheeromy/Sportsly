@@ -2,7 +2,7 @@ from django.contrib import admin
 from product import models
 
 from mptt.admin import DraggableMPTTAdmin
-from .models import Category, Product , Product_item
+
 
 
 class CategoryAdmin(DraggableMPTTAdmin):
@@ -15,16 +15,16 @@ class CategoryAdmin(DraggableMPTTAdmin):
         qs = super().get_queryset(request)
 
         # Add cumulative product count
-        qs = Category.objects.add_related_count(
+        qs = models.Category.objects.add_related_count(
                 qs,
-                Product,
+                models.Product,
                 'category',
                 'products_cumulative_count',
                 cumulative=True)
 
         # Add non cumulative product count
-        qs = Category.objects.add_related_count(qs,
-                 Product,
+        qs = models.Category.objects.add_related_count(qs,
+                 models.Product,
                  'category',
                  'products_count',
                  cumulative=False)
@@ -51,3 +51,4 @@ admin.site.register(models.Product_Image)
 admin.site.register(models.Product)
 admin.site.register(models.Product_item, Product_Item_Admin)
 admin.site.register(models.Banner)
+admin.site.register(models.Brand)

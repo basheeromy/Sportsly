@@ -12,10 +12,21 @@ class ProductItemFilter(filters.FilterSet):
         based on bellow defined criteria.
     """
 
+    # deep_search_field = filters.CharFi
+
     name = filters.CharFilter(
         field_name='name__name',
         lookup_expr='icontains'
     )
+    category = filters.CharFilter(
+        field_name='name__category__name',
+        lookup_expr='icontains'
+    )
+    # category = filters.MultipleChoiceFilter(
+    #     field_name='name__category__name',
+    #     conjoined=True,
+    #     lookup_expr='icontains'
+    # )
     size = filters.CharFilter(
         field_name='size__name',
         lookup_expr='icontains'
@@ -31,6 +42,11 @@ class ProductItemFilter(filters.FilterSet):
     max_price = filters.NumberFilter(
         field_name="price",
         lookup_expr='lte'
+    )
+
+    brand = filters.CharFilter(
+        field_name = 'name__brand__name',
+        lookup_expr='icontains'
     )
 
     discount = filters.NumberFilter(

@@ -43,11 +43,19 @@ class ProductItemListView(ListAPIView):
     serializer_class = ProductItemSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = ProductItemFilter
-    
+
 
 class ProductTileListView(ListAPIView):
 
     serializer_class = ProductItemListSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    # filterset_class = ProductItemFilter
+
+    # def get_queryset(self):
+
+    #     return Product.objects.prefetch_related('item')
+
+
 
     def get_queryset(self):
 
