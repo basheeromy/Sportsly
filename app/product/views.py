@@ -46,31 +46,30 @@ class ProductItemListView(ListAPIView):
 
 
 class ProductTileListView(ListAPIView):
-
-    serializer_class = ProductItemListSerializer
+    """
+        View to return all distinct product items
+        
+    """
+    queryset = Product_item.objects.order_by('name').distinct('name')
+    serializer_class = ProductItemSerializer
     filter_backends = (filters.DjangoFilterBackend,)
-    # filterset_class = ProductItemFilter
+    filterset_class = ProductItemFilter
+    # serializer_class = ProductItemListSerializer
 
     # def get_queryset(self):
 
-    #     return Product.objects.prefetch_related('item')
+    #     # Subquery to fetch the first product item for each product
 
+    #     first_item_subquery = Product_item.objects.filter(
+    #         name=OuterRef('pk')
+    #     ).order_by('updated_on').values('pk')[:1]
 
+    #     # Annotate each product with the first product item
+    #     queryset = Product.objects.annotate(
+    #         first_item_id=Subquery(first_item_subquery)
+    #     )
 
-    def get_queryset(self):
-
-        # Subquery to fetch the first product item for each product
-        first_item_subquery = Product_item.objects.filter(
-            name=OuterRef('pk')
-        ).order_by('updated_on').values('pk')[:1]
-
-        # Annotate each product with the first product item
-        queryset = Product.objects.annotate(
-            first_item_id=Subquery(first_item_subquery)
-        )
-        # .select_related('owner')
-
-        return queryset
+    #     return queryset
 
 
 

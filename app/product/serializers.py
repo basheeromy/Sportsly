@@ -116,6 +116,42 @@ class ProductItemSerializer(serializers.ModelSerializer):
         return product_item
 
 
+class ProductTileSerializer(serializers.ModelSerializer):
+    images = ImageSerializer(
+        many=True,
+        read_only=True
+    )
+    name = serializers.StringRelatedField()
+    brandName = serializers.StringRelatedField()
+    color = serializers.StringRelatedField()
+
+    class Meta:
+        model = Product_item
+        fields = [
+            'id',
+            'name',
+            'SKU',
+            'size',
+            'color',
+            'price',
+            'quantity',
+            'discount',
+            'created_on',
+            'updated_on',
+            'is_active',
+            'coupon',
+            'images'
+        ]
+        extra_kwargs = {
+            'created_on': {
+                'required': False,
+                'read_only': True
+            },
+            'updated_on': {
+                'required': False,
+                'read_only': True
+            },
+        }
 class ProductItemListSerializer(serializers.ModelSerializer):
     """
         This serializer helps us to serialize the

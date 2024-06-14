@@ -63,3 +63,7 @@ class ProductItemFilter(filters.FilterSet):
             'size',
             'discount'
         )
+
+
+class ProductTileFilter():
+    pass
