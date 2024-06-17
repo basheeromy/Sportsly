@@ -237,3 +237,41 @@ class Banner(models.Model):
         limit_choices_to={"is_seller": True}
     )
     validity = models.DateTimeField(null=True, blank=True)
+
+
+class Product_review(models.Model):
+    """
+        Model to handle product reviews
+        and ratings.
+    """
+
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name='reviews'
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        related_name='product_reviews'
+    )
+    rating = models.DecimalField(
+        max_digits=3,
+        decimal_places=2,
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(5.00)
+        ]
+    )
+    comment = models.TextField(
+        blank=True,
+        null=True
+    )
+    created_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateField(
+        null=True,
+        blank=True
+    )
+
+    def __str__(self):
+        return f'Review of {self.product.name} by {self.user.name}'
