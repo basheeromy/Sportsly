@@ -123,24 +123,28 @@ class ProductTileSerializer(serializers.ModelSerializer):
     )
     name = serializers.StringRelatedField()
     brandName = serializers.StringRelatedField()
-    color = serializers.StringRelatedField()
+    # color = serializers.StringRelatedField()
 
     class Meta:
         model = Product_item
         fields = [
             'id',
             'name',
-            'SKU',
-            'size',
-            'color',
+            # 'SKU',
+            # 'size',
+            # 'color',
             'price',
-            'quantity',
+            # 'quantity',
             'discount',
-            'created_on',
-            'updated_on',
-            'is_active',
-            'coupon',
-            'images'
+            # 'created_on',
+            # 'updated_on',
+            # 'is_active',
+            # 'coupon',
+            'images',
+            'brandName',
+            'sales_volume',
+            'tag',
+            'average_rating'
         ]
         extra_kwargs = {
             'created_on': {
@@ -152,6 +156,8 @@ class ProductTileSerializer(serializers.ModelSerializer):
                 'read_only': True
             },
         }
+
+
 class ProductItemListSerializer(serializers.ModelSerializer):
     """
         This serializer helps us to serialize the

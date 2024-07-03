@@ -18,7 +18,8 @@ from .serializers import (
     BannerSerializer,
     CategorySerializer,
     ProductItemListSerializer,
-    CategoryTreeSerializer
+    CategoryTreeSerializer,
+    ProductTileSerializer
 )
 
 from .filters import ProductItemFilter
@@ -32,6 +33,8 @@ class ProductListView(ListAPIView):
     @extend_schema(request=ProductSerializer, responses=None)
     def get(self, request, format=None):
         products = Product.objects.all()
+        # print(products.get(id=5))
+        print(Product.average_rating(products.get(id=5)))
         serializer = ProductSerializer(products, many=True)
 
         return Response(serializer.data)
@@ -48,10 +51,10 @@ class ProductItemListView(ListAPIView):
 class ProductTileListView(ListAPIView):
     """
         View to return all distinct product items
-        
+
     """
     queryset = Product_item.objects.order_by('name').distinct('name')
-    serializer_class = ProductItemSerializer
+    serializer_class = ProductTileSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = ProductItemFilter
     # serializer_class = ProductItemListSerializer

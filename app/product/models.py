@@ -11,6 +11,7 @@ from core.models import User
 from django.utils import timezone
 from django.utils.text import slugify
 from mptt.models import MPTTModel, TreeForeignKey
+from django.db.models import Avg
 
 
 def category_image_file_path(instance, filename):
@@ -123,6 +124,10 @@ class Product(models.Model):
     )
     is_active = models.BooleanField(default=True)
 
+    # @property
+    def average_rating(self):
+        return self.reviews.aggregate(Avg('rating'))
+
     # objects = ProductManager()
 
     def __str__(self):
@@ -185,6 +190,44 @@ def product_image_file_path(instance, filename):
 
     return os.path.join('uploads', 'product', filename)
 
+class Product_review(models.Model):
+    """
+        Model to handle product reviews
+        and ratings.
+    """
+
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name='reviews'
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        related_name='product_reviews'
+    )
+    rating = models.DecimalField(
+        max_digits=3,
+        decimal_places=2,
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(5.00)
+        ]
+    )
+    comment = models.TextField(
+        blank=True,
+        null=True
+    )
+    created_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateField(
+        null=True,
+        blank=True
+    )
+
+    def __str__(self):
+        return f'Review of {self.product.name} by {self.user.name}'
+
+
 class Product_Image(models.Model):
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to=product_image_file_path)
@@ -237,41 +280,3 @@ class Banner(models.Model):
         limit_choices_to={"is_seller": True}
     )
     validity = models.DateTimeField(null=True, blank=True)
-
-
-class Product_review(models.Model):
-    """
-        Model to handle product reviews
-        and ratings.
-    """
-
-    product = models.ForeignKey(
-        Product,
-        on_delete=models.CASCADE,
-        related_name='reviews'
-    )
-    user = models.ForeignKey(
-        User,
-        on_delete=models.PROTECT,
-        related_name='product_reviews'
-    )
-    rating = models.DecimalField(
-        max_digits=3,
-        decimal_places=2,
-        validators=[
-            MinValueValidator(0),
-            MaxValueValidator(5.00)
-        ]
-    )
-    comment = models.TextField(
-        blank=True,
-        null=True
-    )
-    created_at = models.DateField(auto_now_add=True)
-    updated_at = models.DateField(
-        null=True,
-        blank=True
-    )
-
-    def __str__(self):
-        return f'Review of {self.product.name} by {self.user.name}'
