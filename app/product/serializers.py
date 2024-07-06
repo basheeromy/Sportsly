@@ -122,29 +122,25 @@ class ProductTileSerializer(serializers.ModelSerializer):
         read_only=True
     )
     name = serializers.StringRelatedField()
-    brandName = serializers.StringRelatedField()
-    # color = serializers.StringRelatedField()
+    brand_name = serializers.StringRelatedField()
+    average_rating = serializers.SerializerMethodField()
+    tag = serializers.SerializerMethodField()
+    effective_price = serializers.SerializerMethodField()
+
 
     class Meta:
         model = Product_item
         fields = [
             'id',
             'name',
-            # 'SKU',
-            # 'size',
-            # 'color',
             'price',
-            # 'quantity',
             'discount',
-            # 'created_on',
-            # 'updated_on',
-            # 'is_active',
-            # 'coupon',
             'images',
-            'brandName',
-            'sales_volume',
+            'brand_name',
+            # 'sales_volume',
             'tag',
-            'average_rating'
+            'average_rating',
+            'effective_price',
         ]
         extra_kwargs = {
             'created_on': {
@@ -156,6 +152,27 @@ class ProductTileSerializer(serializers.ModelSerializer):
                 'read_only': True
             },
         }
+
+    def get_average_rating(self, obj):
+        """
+            method to fetch average rating
+            per product.
+        """
+        return obj.name.average_rating["rating__avg"]
+
+    def get_tag(self, obj):
+        """
+            method to fetch tag.
+        """
+        return obj.name.tag
+
+    def get_effective_price(self, obj):
+        """
+            method to calculate average
+            price.
+        """
+        effective_price = float(obj.price) - (obj.discount/100)
+        return effective_price
 
 
 class ProductItemListSerializer(serializers.ModelSerializer):

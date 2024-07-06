@@ -105,6 +105,14 @@ class Brand(models.Model):
         return(self.name)
 
 
+class Tag(models.TextChoices):
+    trending = 'Trending'
+    new_arrival = 'New Arrival'
+    best_seller = 'Best Seller'
+    limited_edition = 'Limited Edition'
+    top_rating = 'Top Rating'
+
+
 class Product(models.Model):
     """Manage Products."""
     name = models.CharField(max_length=200)
@@ -117,6 +125,12 @@ class Product(models.Model):
     )
     description = models.TextField(blank=True)
     category = models.ManyToManyField(Category, blank=True)
+    tag = models.CharField(
+        max_length=20,
+        choices=Tag.choices,
+        null=True,
+        blank=True
+    )
     owner = models.ForeignKey(
         User,
         related_name="Seller_of_product",
@@ -124,9 +138,9 @@ class Product(models.Model):
     )
     is_active = models.BooleanField(default=True)
 
-    # @property
+    @property
     def average_rating(self):
-        return self.reviews.aggregate(Avg('rating'))
+        return self.reviews.aggregate(Avg('rating')) or 0.0
 
     # objects = ProductManager()
 
