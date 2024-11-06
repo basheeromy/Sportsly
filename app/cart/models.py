@@ -19,11 +19,4 @@ class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.product}'
-
-class Wishlist(models.Model):
-    """
-    Model to manage wishlists.
-    """
-    product = models.ForeignKey(Product_item, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+        return f"{self.user}'s Cart with {self.product}"

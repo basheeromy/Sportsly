@@ -35,6 +35,8 @@ from django.contrib.auth import get_user_model
 
 from drf_spectacular.utils import extend_schema
 
+
+
 import math
 import random
 
@@ -50,6 +52,8 @@ class ManageUserView(RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
+        print(f"from user profile api {self.request.user}")
+
         return self.request.user
 
 class GenerateTokenView(APIView):
@@ -144,6 +148,7 @@ class ListAllUserView(ListAPIView):
     """
 
     serializer_class = UserSerializer
+    queryset = get_user_model().objects.all()
     authentication_classes = [JWTAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 

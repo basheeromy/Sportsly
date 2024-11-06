@@ -33,6 +33,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
 ALLOWED_HOSTS = [
     '127.0.0.1',
     '192.168.1.12',
@@ -54,24 +55,28 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # apps
     'core',
-    'user.apps.UserConfig',
-    'rest_framework',
-    'drf_spectacular',
-    'rest_framework_simplejwt',
-    'rest_framework_simplejwt.token_blacklist',
-    'corsheaders',
     'product',
     'vendor',
     'cart',
     'order',
+    'wishlist',
+    'user',
+
+    # rest framework
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
+
+    'drf_spectacular',
+    'corsheaders',
     'django_celery_results',
     'django_celery_beat',
     'mptt',
-    'django_filters'
+    'django_filters',
 ]
-
-
 
 
 MIDDLEWARE = [
@@ -96,7 +101,7 @@ if DEBUG:
         "127.0.0.1",
         "localhost"
     ]
-    
+
     DEBUG_TOOLBAR_CONFIG = {
         'SHOW_TOOLBAR_CALLBACK': lambda request: DEBUG,
     }
@@ -199,7 +204,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=10),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=3),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=225),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,

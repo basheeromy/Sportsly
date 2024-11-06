@@ -12,7 +12,7 @@ from user.models import (
     Address,
     BillingAddress
 )
-from order.task import send_order_details
+# from order.task import send_order_details
 
 class Order(models.Model):
     """Medel to manage orders"""
@@ -70,19 +70,21 @@ def created_user(sender, created, instance, **kwargs):
 
         )"""
 
-@receiver(post_save, sender=OrderItem)
-def post_create_functions(sender, created, instance, **kwargs):
-    if created:
-        product = instance.product.__str__()
-        quantity = instance.quantity
-        shipping_address = instance.order.shipping_address.__str__()
-        billing_address = instance.order.billing_address.__str__()
-        user = instance.order.user.__str__()
+# @receiver(post_save, sender=OrderItem)
+# def post_create_functions(sender, created, instance, **kwargs):
+#     if created:
+#         product = instance.product.__str__()
+#         quantity = instance.quantity
+#         shipping_address = instance.order.shipping_address.__str__()
+#         billing_address = instance.order.billing_address.__str__()
+#         user = instance.order.user.__str__()
 
-        send_order_details.delay(
-            product,
-            quantity,
-            shipping_address,
-            billing_address,
-            user
-        )
+#         send_order_details.delay(
+#             product,
+#             quantity,
+#             shipping_address,
+#             billing_address,
+#             user
+#         )
+
+

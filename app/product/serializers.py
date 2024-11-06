@@ -9,6 +9,9 @@ from .models import (
     Product_Image,
     Banner
 )
+from wishlist.models import (
+    WishList
+)
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -38,14 +41,12 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ImageSerializer(serializers.ModelSerializer):
-    owner = serializers.StringRelatedField()
     class Meta:
         model = Product_Image
         fields = [
             'id',
             'name',
             'image',
-            'owner'
         ]
 
     def create(self, validated_data):
@@ -56,7 +57,6 @@ class ImageSerializer(serializers.ModelSerializer):
             image=validated_data['image']
         )
         image.product = validated_data['product']
-        image.owner = validated_data['owner']  # change to owner.
         image.save()
 
         return image
@@ -122,10 +122,11 @@ class ProductTileSerializer(serializers.ModelSerializer):
         read_only=True
     )
     name = serializers.StringRelatedField()
-    brand_name = serializers.StringRelatedField()
+    brand_name = serializers.SerializerMethodField()
     average_rating = serializers.SerializerMethodField()
     tag = serializers.SerializerMethodField()
     effective_price = serializers.SerializerMethodField()
+    wish_listed = serializers.SerializerMethodField()
 
 
     class Meta:
@@ -141,6 +142,7 @@ class ProductTileSerializer(serializers.ModelSerializer):
             'tag',
             'average_rating',
             'effective_price',
+            'wish_listed',
         ]
         extra_kwargs = {
             'created_on': {
@@ -152,6 +154,18 @@ class ProductTileSerializer(serializers.ModelSerializer):
                 'read_only': True
             },
         }
+
+    def get_brand_name(self, obj):
+        """
+            method to get brand name
+            from related field.
+        """
+        # if obj.name.brand:
+        #     return obj.name.brand.name
+        # else:
+        #     return None
+
+        return getattr(obj.name.brand, 'name', None)
 
     def get_average_rating(self, obj):
         """
@@ -171,8 +185,25 @@ class ProductTileSerializer(serializers.ModelSerializer):
             method to calculate average
             price.
         """
-        effective_price = float(obj.price) - (obj.discount/100)
+        effective_price = float(obj.price) * (1-(obj.discount/100))
         return effective_price
+
+    def get_wish_listed(self, obj):
+        """
+            method to find the product
+            item is wish listed or not.
+            returns boolean.
+        """
+        user = self.context['request'].user
+        print(f"this is from product tile serializer and user is {user}")
+        if user.is_anonymous:
+            return False
+        else:
+            wish_listed = WishList.objects.filter(
+                user = user,
+                product_item = obj
+            ).exists()
+            return wish_listed
 
 
 class ProductItemListSerializer(serializers.ModelSerializer):
@@ -285,7 +316,7 @@ class ColorSerializer(serializers.ModelSerializer):
         color = Color(
             name=validated_data['name']
         )
-        color.owner = validated_data['created_by']  # change to owner
+        color.owner = validated_data['owner']  # change to owner
         color.save()
 
         return color

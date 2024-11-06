@@ -4,8 +4,7 @@ Serializers to manange cart items and wishlist.
 from rest_framework import serializers
 
 from .models import (
-    CartItem,
-    Wishlist
+    CartItem
 )
 
 
@@ -46,14 +45,3 @@ class CartUpdateSerializer(serializers.ModelSerializer):
         fields = [
             'quantity'
         ]
-
-        
-class WishListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Wishlist
-        fields = [
-            'id',
-            'product',
-            'user'
-        ]
-        extra_kwargs = {'user': {'read_only': True}}

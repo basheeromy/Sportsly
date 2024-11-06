@@ -20,5 +20,3 @@ google-auth-oauthlib==1.1.0
 google-auth==2.23.0
 django-mptt==0.16.0
 django-filter==24.2
-django-allauth==0.63.6
-dj-rest-auth==6.0.0

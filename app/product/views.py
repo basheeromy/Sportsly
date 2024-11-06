@@ -5,6 +5,7 @@ from rest_framework.generics import (
 from rest_framework.response import Response
 from rest_framework import status
 
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import permissions
 from .models import (
     Product,
@@ -27,6 +28,7 @@ from drf_spectacular.utils import extend_schema
 from django_filters import rest_framework as filters
 
 from django.db.models import OuterRef, Subquery
+from permissions.custom_permissions import IsOwnerOrReadOnly
 
 class ProductListView(ListAPIView):
 
@@ -55,24 +57,15 @@ class ProductTileListView(ListAPIView):
     """
     queryset = Product_item.objects.order_by('name').distinct('name')
     serializer_class = ProductTileSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly,
+        # IsOwnerOrReadOnly
+
+    ]
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = ProductItemFilter
-    # serializer_class = ProductItemListSerializer
 
-    # def get_queryset(self):
-
-    #     # Subquery to fetch the first product item for each product
-
-    #     first_item_subquery = Product_item.objects.filter(
-    #         name=OuterRef('pk')
-    #     ).order_by('updated_on').values('pk')[:1]
-
-    #     # Annotate each product with the first product item
-    #     queryset = Product.objects.annotate(
-    #         first_item_id=Subquery(first_item_subquery)
-    #     )
-
-    #     return queryset
 
 
 

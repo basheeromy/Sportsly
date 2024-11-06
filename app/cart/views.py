@@ -1,8 +1,7 @@
 """
-Views to manage cart and wish list
+Views to manage cart.
 """
 
-from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from .models import *
 from .serializers import *
@@ -50,3 +49,5 @@ class UpdateDeleteCartItem(RetrieveUpdateDestroyAPIView):
         obj = get_object_or_404(self.get_queryset(), pk=self.kwargs["id"])
         self.check_object_permissions(self.request, obj)
         return obj
+
+

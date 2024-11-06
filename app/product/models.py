@@ -13,6 +13,8 @@ from django.utils.text import slugify
 from mptt.models import MPTTModel, TreeForeignKey
 from django.db.models import Avg
 
+# from cart.models import WishList
+
 
 def category_image_file_path(instance, filename):
     """Generate file path for new category image."""
@@ -52,7 +54,11 @@ class Category(MPTTModel):
 class Color(models.Model):
     """Color options for products."""
     name = models.CharField(max_length=100, unique=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        limit_choices_to={"is_seller": True}
+    )
 
     def __str__(self):
         return self.name
@@ -61,7 +67,11 @@ class Color(models.Model):
 class Size(models.Model):
     """Size options for products."""
     name = models.CharField(max_length=100, unique=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        limit_choices_to={"is_seller": True}
+        )
 
     def __str__(self):
         return self.name
@@ -98,7 +108,9 @@ class Brand(models.Model):
     owner = models.ForeignKey(
         User,
         related_name='owner_of_brand',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+
+        limit_choices_to={"is_seller": True}
     )
 
     def __str__(self):
@@ -134,7 +146,8 @@ class Product(models.Model):
     owner = models.ForeignKey(
         User,
         related_name="Seller_of_product",
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        limit_choices_to={"is_seller": True}
     )
     is_active = models.BooleanField(default=True)
 
@@ -161,7 +174,7 @@ class Product_item(models.Model):
     quantity = models.IntegerField(
         default=0,
         validators=[MinValueValidator(0)]
-        )
+    )
 
     discount = models.IntegerField(
         default=0,
@@ -250,7 +263,7 @@ class Product_Image(models.Model):
         related_name="images",
         on_delete=models.CASCADE
     )
-    owner = models.ForeignKey(User, related_name="Uploaded_seller", on_delete=models.CASCADE)
+    # owner = models.ForeignKey(User, related_name="Uploaded_seller", on_delete=models.CASCADE)
     def __str__(self):
         return f'{self.name} image'
 

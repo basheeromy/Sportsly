@@ -1,4 +1,4 @@
-version: '3.9'
+
 services:
   app:
     restart: always
@@ -60,6 +60,8 @@ services:
     restart: always
     build:
       context: .
+      args:
+        - DEV=true
     image: django_celery_worker
     command: sh -c "python manage.py migrate django_celery_results &&
                     celery -A app worker -l INFO"
@@ -79,6 +81,8 @@ services:
     restart: always
     build:
       context: .
+      args:
+        - DEV=true
     image: django_celery_beat
     command: >
       sh -c "python manage.py migrate &&
@@ -99,6 +103,8 @@ services:
     restart: always
     build:
       context: .
+      args:
+        - DEV=true
     image: django_celery_flower
     command: >
       sh -c "python manage.py start_flower"
@@ -134,4 +140,3 @@ networks:
   network:
     driver: bridge
     name: sportsly-internal-network
-    
