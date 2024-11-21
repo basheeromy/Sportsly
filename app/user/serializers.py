@@ -114,14 +114,14 @@ class AddressSerializer(serializers.ModelSerializer):
             first_name = validated_data['first_name'],
             last_name = validated_data['last_name'],
             user = user,
-            company_name = validated_data['company_name'],
             apartment = validated_data['apartment'],
             street = validated_data['street'],
-            town = validated_data['town'],
+            district = validated_data['district'],
             state = validated_data['state'],
             pin = validated_data['pin'],
             mobile = validated_data['mobile'],
             secondary_mob = validated_data['secondary_mob'],
+            tag = validated_data['tag'],
             additional_info = validated_data['additional_info'],
         )
         address.save()

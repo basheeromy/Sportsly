@@ -149,6 +149,11 @@ class Product(models.Model):
         on_delete=models.CASCADE,
         limit_choices_to={"is_seller": True}
     )
+    warranty = models.DecimalField(
+        max_digits=4,
+        default=0,
+        decimal_places=2
+    )
     is_active = models.BooleanField(default=True)
 
     @property
