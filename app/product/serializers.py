@@ -329,3 +329,46 @@ class BannerSerializer(serializers.ModelSerializer):
             'banner_image',
             'path'
         ]
+
+
+class ProductItemDetailSerializer(serializers.ModelSerializer):
+    warranty = serializers.SerializerMethodField()
+    availableSizes = serializers.SerializerMethodField()
+    class Meta:
+        model = Product_item,
+        fields = [
+            'SKU',
+            'size',
+            'color',
+            'quantity',
+            'warranty',
+            'availableSizes',
+            'availableColor',
+            'offerDetails'
+        ]
+
+    def get_warranty(self, obj):
+        """method to fetch warranty data of
+        the product. product model is connected
+        with related field name
+
+        Args:
+            obj (model instance): Product_item instance.
+        """
+        return obj.name.warranty
+
+    def get_available_sizes(self, obj):
+        """
+        method to fetch available sizes of
+        a particular product.
+        """
+        colors = obj.name.item.values_list('size__name', flat=True).distinct()
+        return list(colors)
+
+    def get_available_sizes(self, obj):
+        """
+        method to fetch available colors of
+        a particular product.
+        """
+        sizes = obj.name.item.values_list('color__name', flat=True).distinct()
+        return list(sizes)

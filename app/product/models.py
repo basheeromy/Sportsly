@@ -12,6 +12,7 @@ from django.utils import timezone
 from django.utils.text import slugify
 from mptt.models import MPTTModel, TreeForeignKey
 from django.db.models import Avg
+from django.core.exceptions import ValidationError
 
 # from cart.models import WishList
 
@@ -53,7 +54,7 @@ class Category(MPTTModel):
 
 class Color(models.Model):
     """Color options for products."""
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
     owner = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -66,7 +67,7 @@ class Color(models.Model):
 
 class Size(models.Model):
     """Size options for products."""
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
     owner = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -75,29 +76,6 @@ class Size(models.Model):
 
     def __str__(self):
         return self.name
-
-
-# class ProductQuerySet(models.QuerySet):
-
-#     def with_first_item(self):
-
-#         first_item_subquery = Product_item.objects.filter(
-#             name=models.OuterRef('pk')
-#         ).order_by('updated_on').values('pk')[:1]
-
-#         return self.annotate(
-#             first_item_id=models.Subquery(
-#                 first_item_subquery
-#             )
-#         )
-
-
-# class ProductManager(models.Manager):
-#     def get_queryset(self):
-#         return ProductQuerySet(
-#             self.model,
-#             using=self._db
-#         ).with_first_item()
 
 
 class Brand(models.Model):
@@ -173,8 +151,14 @@ class Product_item(models.Model):
         related_name="item"
     )
     SKU = models.CharField(max_length=100, unique=True)
-    size = models.ForeignKey(Size, on_delete=models.CASCADE)
-    color = models.ForeignKey(Color, on_delete=models.CASCADE)
+    size = models.ForeignKey(
+        Size,
+        on_delete=models.CASCADE
+    )
+    color = models.ForeignKey(
+        Color,
+        on_delete=models.CASCADE
+    )
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.IntegerField(
         default=0,
@@ -211,16 +195,19 @@ class Product_item(models.Model):
         self.updated_on = timezone.now()
         return super(Product_item, self).save(*args, **kwargs)
 
+    def clean(self):
+        # Validate color and size fields
+        if (
+            (self.name.owner != self.size.owner )
+            or
+            (self.name.owner != self.color.owner)
+        ):
+            raise ValidationError("The owner of the Size and Color must match the owner of the Product.")
+
+
     def __str__(self):
         return f'{self.name} {self.color} {self.size}'
 
-
-def product_image_file_path(instance, filename):
-    """Generate file path for new product image."""
-    ext = os.path.splitext(filename)[1]
-    filename = f'{uuid.uuid4()}{ext}'
-
-    return os.path.join('uploads', 'product', filename)
 
 class Product_review(models.Model):
     """
@@ -228,25 +215,28 @@ class Product_review(models.Model):
         and ratings.
     """
 
+    title = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
     product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
         related_name='reviews'
     )
-    user = models.ForeignKey(
+    reviewer = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
         related_name='product_reviews'
     )
-    rating = models.DecimalField(
-        max_digits=3,
-        decimal_places=2,
+    rating = models.PositiveSmallIntegerField(
+        default=0,
         validators=[
-            MinValueValidator(0),
-            MaxValueValidator(5.00)
+            MaxValueValidator(5)
         ]
     )
-    comment = models.TextField(
+    review = models.TextField(
         blank=True,
         null=True
     )
@@ -257,8 +247,36 @@ class Product_review(models.Model):
     )
 
     def __str__(self):
-        return f'Review of {self.product.name} by {self.user.name}'
+        return f'Review of {self.product.name} by {self.reviewer.name}'
 
+
+def review_image_file_path(instance, filename):
+    """Generate file path for new product image."""
+    ext = os.path.splitext(filename)[1]
+    filename = f'{uuid.uuid4()}{ext}'
+
+    return os.path.join('uploads', 'review', filename)
+
+class ReviewImages(models.Model):
+    image = models.ImageField(
+        upload_to=review_image_file_path
+    )
+    review = models.ForeignKey(
+        Product_review,
+        related_name="image",
+        on_delete=models.CASCADE
+    )
+
+    def __str__(self):
+        return f'Review {self.review.id} - {self.image.name}'
+
+
+def product_image_file_path(instance, filename):
+    """Generate file path for new product image."""
+    ext = os.path.splitext(filename)[1]
+    filename = f'{uuid.uuid4()}{ext}'
+
+    return os.path.join('uploads', 'product', filename)
 
 class Product_Image(models.Model):
     name = models.CharField(max_length=100)
