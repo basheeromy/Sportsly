@@ -14,7 +14,8 @@ from .models import (
     Product,
     Product_item,
     Banner,
-    Category
+    Category,
+    Product_review
 )
 from .serializers import (
     ProductSerializer,
@@ -23,7 +24,9 @@ from .serializers import (
     CategorySerializer,
     ProductItemListSerializer,
     CategoryTreeSerializer,
-    ProductTileSerializer
+    ProductTileSerializer,
+    ProductItemDetailSerializer,
+    productReviewListSerializer
 )
 
 from .filters import ProductItemFilter
@@ -61,11 +64,11 @@ class ProductTileListView(ListAPIView):
     queryset = Product_item.objects.order_by('name').distinct('name')
     serializer_class = ProductTileSerializer
     authentication_classes = [JWTAuthentication]
-    permission_classes = [
-        permissions.IsAuthenticatedOrReadOnly,
-        # IsOwnerOrReadOnly
+    # permission_classes = [
+    #     permissions.IsAuthenticatedOrReadOnly,
+    #     # IsOwnerOrReadOnly
 
-    ]
+    # ]
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = ProductItemFilter
 
@@ -84,5 +87,26 @@ class ListCategoryTreeAPIView(ListAPIView):
     queryset = Category.objects.filter(parent__isnull=True)
 
 
-class ProductItemDetailView(APIView):
-    pass
+class ProductItemDetailView(RetrieveAPIView):
+    serializer_class = ProductItemDetailSerializer
+    queryset = Product_item.objects.all()
+    lookup_field = 'id'
+
+
+class productReviewListView(ListAPIView):
+    """Fetch all reviews related to a
+    particular product.
+
+    KWArgs:
+        ListAPIView (product_id): product id
+        is passed as url parameter. accessing
+        product id from kwargs.
+    """
+
+    serializer_class = productReviewListSerializer
+
+    def get_queryset(self):
+        # customize queryset
+
+        product_id = self.kwargs['product_id']
+        return Product_review.objects.filter(product = product_id)

@@ -7,7 +7,9 @@ from .models import (
     Size,
     Color,
     Product_Image,
-    Banner
+    Banner,
+    Product_review,
+    ReviewImages
 )
 from wishlist.models import (
     WishList
@@ -334,8 +336,13 @@ class BannerSerializer(serializers.ModelSerializer):
 class ProductItemDetailSerializer(serializers.ModelSerializer):
     warranty = serializers.SerializerMethodField()
     availableSizes = serializers.SerializerMethodField()
+    ratingCount = serializers.SerializerMethodField()
+    reviewCount = serializers.SerializerMethodField()
+    availableColors = serializers.SerializerMethodField()
+    size = serializers.StringRelatedField()
+    color = serializers.StringRelatedField()
     class Meta:
-        model = Product_item,
+        model = Product_item
         fields = [
             'SKU',
             'size',
@@ -343,8 +350,9 @@ class ProductItemDetailSerializer(serializers.ModelSerializer):
             'quantity',
             'warranty',
             'availableSizes',
-            'availableColor',
-            'offerDetails'
+            'availableColors',
+            'ratingCount',
+            'reviewCount'
         ]
 
     def get_warranty(self, obj):
@@ -357,18 +365,63 @@ class ProductItemDetailSerializer(serializers.ModelSerializer):
         """
         return obj.name.warranty
 
-    def get_available_sizes(self, obj):
+    def get_availableColors(self, obj):
         """
         method to fetch available sizes of
         a particular product.
         """
-        colors = obj.name.item.values_list('size__name', flat=True).distinct()
-        return list(colors)
+        colors = obj.name.item.values_list('color__name', flat=True).distinct()
+        return list(set(colors))
 
-    def get_available_sizes(self, obj):
+    def get_availableSizes(self, obj):
         """
         method to fetch available colors of
         a particular product.
         """
-        sizes = obj.name.item.values_list('color__name', flat=True).distinct()
-        return list(sizes)
+        sizes = obj.name.item.distinct().values_list('size__name', flat=True)
+        return list(set(sizes))
+
+    def get_ratingCount(self, obj):
+        """
+        method to fetch number of ratings.
+        """
+        return obj.name.reviews.filter(rating__gt=0).count()
+
+    def get_reviewCount(self, obj):
+        """
+        method to fetch number of reviews.
+        """
+        return obj.name.reviews.filter(review__isnull=False).count()
+
+
+class ReviewImageSerializer(serializers.ModelSerializer):
+    """
+    serializer for review images.
+    """
+    class Meta:
+        model = ReviewImages
+        fields = [
+            'id',
+            'image',
+        ]
+class productReviewListSerializer(serializers.ModelSerializer):
+    """
+    serializer to validate &
+    review product reviews.
+    """
+
+    image = ReviewImageSerializer(
+        many=True,
+        read_only=True
+    )
+    class Meta:
+        model = Product_review
+        fields = [
+            "id",
+            "title",
+            "reviewer",
+            "rating",
+            "created_at",
+            "updated_at",
+            "image"
+        ]
