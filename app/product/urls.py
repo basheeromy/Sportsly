@@ -7,7 +7,8 @@ from .views import (
     ListCategoryTreeAPIView,
     ProductTileListView,
     ProductItemDetailView,
-    productReviewListView
+    productReviewListView,
+    similarProductListView
 )
 
 
@@ -18,5 +19,6 @@ urlpatterns = [
     path('list-categories', ListCategoryTreeAPIView.as_view(), name='list-categories'),
     path('list-product-tiles/',ProductTileListView.as_view(), name='product-tile-list' ),
     path('detail/<int:id>', ProductItemDetailView.as_view(), name='product-item-details'),
-    path('detail/<int:product_id>/reviews', productReviewListView.as_view(), name='product-review-list')
+    path('detail/<int:product_id>/reviews', productReviewListView.as_view(), name='product-review-list'),
+    path('detail/<int:product_id>/similar-products', similarProductListView.as_view(), name='list-similar-products')
 ]

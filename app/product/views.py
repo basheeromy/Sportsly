@@ -110,3 +110,26 @@ class productReviewListView(ListAPIView):
 
         product_id = self.kwargs['product_id']
         return Product_review.objects.filter(product = product_id)
+
+
+class similarProductListView(ListAPIView):
+    """
+    view to handle similar product listing API.
+    """
+
+    serializer_class = ProductTileSerializer
+
+
+    def get_queryset(self):
+        """
+        """
+        try:
+            product_item_id = self.kwargs['product_id']
+            product_item = Product_item.objects.get(id=product_item_id)
+            category = product_item.name.category.all().values_list('id', flat=True)
+            return Product_item.objects.filter(
+                name__category__id__in=category
+            ).exclude(name__id=product_item.name.id).order_by('name').distinct('name')
+
+        except Product_item.DoesNotExist:
+            return None

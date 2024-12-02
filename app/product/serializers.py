@@ -339,6 +339,7 @@ class ProductItemDetailSerializer(serializers.ModelSerializer):
     ratingCount = serializers.SerializerMethodField()
     reviewCount = serializers.SerializerMethodField()
     availableColors = serializers.SerializerMethodField()
+    description = serializers.SerializerMethodField()
     size = serializers.StringRelatedField()
     color = serializers.StringRelatedField()
     class Meta:
@@ -352,7 +353,8 @@ class ProductItemDetailSerializer(serializers.ModelSerializer):
             'availableSizes',
             'availableColors',
             'ratingCount',
-            'reviewCount'
+            'reviewCount',
+            'description'
         ]
 
     def get_warranty(self, obj):
@@ -393,6 +395,14 @@ class ProductItemDetailSerializer(serializers.ModelSerializer):
         """
         return obj.name.reviews.filter(review__isnull=False).count()
 
+    def get_description(self, obj):
+        """
+        method to fetch description of
+        the product
+        """
+
+        return obj.name.description
+
 
 class ReviewImageSerializer(serializers.ModelSerializer):
     """
@@ -414,6 +424,7 @@ class productReviewListSerializer(serializers.ModelSerializer):
         many=True,
         read_only=True
     )
+    reviewer = serializers.StringRelatedField()
     class Meta:
         model = Product_review
         fields = [
@@ -421,6 +432,7 @@ class productReviewListSerializer(serializers.ModelSerializer):
             "title",
             "reviewer",
             "rating",
+            "review",
             "created_at",
             "updated_at",
             "image"
